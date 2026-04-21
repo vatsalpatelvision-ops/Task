@@ -1,22 +1,12 @@
 {
-    "95108e79": {
+    "fa2c5d0c": {
         "title": "rich dad",
-        "author": "vatsal",
+        "author": "honey",
         "genre": "finance",
-        "total copies": "4",
-        "available copies": "4",
-        "isbn no": "4567",
-        "publish year": "2004",
+        "total copies": 7,
+        "available copies": 7,
+        "isbn no": 5,
+        "publish year": 2004,
         "shelf": "a13"
-    },
-    "feacae95": {
-        "title": "poor dad",
-        "author": "vatsal",
-        "genre": "finance",
-        "total copies": 5,
-        "available copies": 5,
-        "isbn no": "3434",
-        "publish year": "2000",
-        "shelf": "312"
     }
 }

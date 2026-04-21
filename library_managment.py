@@ -3,9 +3,18 @@ import uuid
 import os
 import json
 import csv
+from datetime import datetime , timedelta
 
 
 FILE_NAME = "book_data.json"
+MEMBER_DATA = "member_data.json"
+
+
+def load_all_member():
+    if not os.path.exists(MEMBER_DATA):
+        return {}
+    with open(MEMBER_DATA, "r") as f:
+        return json.load(f)
 
 
 def load_all_data():
@@ -17,6 +26,10 @@ def load_all_data():
 
 def save_all_data(data):
     with open(FILE_NAME, "w") as f:
+        json.dump(data, f, indent=4)
+
+def save_all_member(data):
+    with open(MEMBER_DATA, "w") as f:
         json.dump(data, f, indent=4)
 
 
@@ -202,7 +215,104 @@ class Books():
 #!Member cls
 
 class Member():
-    pass
+    def __init__(self,name, phone, email, member_type):
+        data = load_all_member()
+
+        for b in data.values():
+            if b["name"].lower() == name.lower():
+                print("Member already exists")
+                return
+
+    
+        self.member_id = str(uuid.uuid4())[:8]    
+        self.name = name
+        self.phone = phone
+        self.email = email
+        self.member_type = member_type
+        self.join_date = datetime.now()
+        self.status = "Active"
+        self.exp_date = datetime.now() + timedelta(days=1)
+        self.save()
+        print(f"New Member with id : {self.member_id}")
+    
+    def save(self):
+        data = load_all_member()
+
+        data[self.member_id] = {
+            "name":self.name,
+            "phone": self.phone,
+            "email": self.email,
+            "member type": self.member_type,
+            "joining date":self.join_date.day,
+            "exp date":self.exp_date.day,
+            "status" : self.status
+        }
+
+        save_all_member(data)
+
+    @classmethod
+    def remove_member(cls):
+        data = load_all_member()
+
+        if not data:
+            print(" No member available")
+            return
+
+        member_id = input("Enter Member ID to remove: ")
+
+        if member_id not in data:
+            print(" Invalid Member ID")
+            return
+
+        data.pop(member_id)
+        save_all_member(data)
+
+        print(" Member removed")
+
+    @classmethod
+    def view_all_member(cls):
+        data = load_all_member()
+
+        if not data:
+            print("No Member available")
+
+        for mid , m in data.items():
+            print(f"""
+            member id : {mid}
+            Member name : {m['name']}
+            Member phone : {m['phone']} 
+            Member type : {m['member type']}
+            """)
+
+    @classmethod
+    def update_member(cls):
+        data = load_all_member()
+
+        member_id = input("Enter Member ID: ")
+
+        if member_id not in data:
+            print(" Invalid ID")
+            return
+
+        member = data[member_id]
+
+        print("Leave blank to keep old value")
+
+        # new_title = input("New title: ")
+        new_phone = input("New phone: ")
+        new_email = input("New email: ")
+        # new_total = input("New total copies: ")
+
+        # if new_title:
+        #     book["title"] = new_title
+        if new_phone:
+            member["phone"] = new_phone
+        if new_email:
+            member["email"] = new_email
+        
+
+        save_all_member(data)
+        print(" Updated successfully")
 
 
 class Issue_Return():
@@ -257,10 +367,10 @@ while True:
                 title = input("Enter title : ")
                 author = input("Enter author : ")
                 genre = input("Enter genre : ")
-                total_copies = input("Enter total copies : ")
-                available_copies = input("Enter available copies : ")
-                isbn_no = input("Enter isbn no : ")
-                publication_year = input("Enter publication year : ")
+                total_copies = int(input("Enter total copies : "))
+                available_copies = int(input("Enter available copies : "))
+                isbn_no = int(input("Enter isbn no : "))
+                publication_year = int(input("Enter publication year : "))
                 shelf = input("Enter shelf location : ")
                 print('-'*25)
 
@@ -313,9 +423,33 @@ while True:
             member_ch = int(input("Enter your choice : "))
             
             if member_ch == 1:
+                print('-'*25)
+                print("Enter following  details : ")
+                name = input("Enter Name : ")
+                phone = input("Enter phone : ")
+                email = input("Enter email : ")
+                member_type = input("Enter member type(Student/ Teacher / External) : ")
+                print('-'*25)
+
+                member1 = Member(name,phone,email,member_type)
+
+            elif member_ch == 2:
+                Member.remove_member()
+            elif member_ch == 3:
+                Member.update_member()
+            elif member_ch == 4:
+                Member.view_all_member()
+            elif member_ch == 5:
                 pass
-            else:
+            elif member_ch == 6:
+                pass
+            elif member_ch == 7:
                 break
+
+            else:
+                print("Enter valid choice : ")
+
+
 
     #!Issue menu
 

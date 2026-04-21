@@ -59,8 +59,8 @@ class Books():
     def save(self):
         data = load_all_data()
 
-        data[self.title] = {
-            "bookid":self.book_id,
+        data[self.book_id] = {
+            "title":self.title,
             "author": self.author,
             "genre": self.genre,
             "total copies": self.total_cp,
@@ -122,8 +122,6 @@ class Admin():
 
 
 
-
-
 #--------------Main Menu---------------------
 
 while True:
@@ -173,7 +171,14 @@ while True:
             elif book_ch ==2:
                 title = input("Enter the title to remove the book : ")
                 data = load_all_data()
-                if title in data:
+                book_exit = False
+                for item in data:
+                    if item.get("title") == title:
+                        book_exist = True
+
+
+
+                if book_exist:
                     # book_id = data[title]["bookid"]
                     # title = data[title]
                     author = data[title]["author"]

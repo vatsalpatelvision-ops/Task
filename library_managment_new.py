@@ -1,130 +1,17 @@
-"""Library Managment system"""
-import uuid
-import os
-import json
-
-FILE_NAME = "book_data.json"
 
 
-def load_all_data():
-    if not os.path.exists(FILE_NAME):
-        return {}
-    with open(FILE_NAME, "r") as f:
-        return json.load(f)
 
-
-def save_all_data(data):
-    with open(FILE_NAME, "w") as f:
-        json.dump(data, f, indent=4)
-
-def load_file_enter(filename):
-    if not os.path.exists(file_name):
-        return {}
-    with open(file_name, "r") as f:
-        return json.load(f)
 
 
 class Books():
-    def __init__(self, title, author, genre, total_cp, available_cp, isbn_no, publish_year, shelf):
-        
-
-        data = load_all_data()
-
-        if title in data:
-            print("Existing Book Found")
-            self.book_id = data[title]["bookid"]
-            self.title = data[title]
-            self.author = data[title]["author"]
-            self.genre = data[title]["genre"]
-            self.total_cp = data[title]["total copies"]
-            self.available_cp = data[title]["available copies"]
-            self.isbn_no = data[title]["isbn no"]
-            self.publish_year = data[title]["publish year"]
-            self.shelf = data[title]["shelf"]
-        else:
-            self.book_id = str(uuid.uuid4())[:8]    
-            print("New Book")
-            self.title = title
-            self.author = author
-            self.genre = genre
-            self.total_cp = total_cp
-            self.available_cp = available_cp
-            self.isbn_no = isbn_no
-            self.publish_year = publish_year
-            self.shelf = shelf
-            self.save()
-
-
-
-    def save(self):
-        data = load_all_data()
-
-        data[self.title] = {
-            "bookid":self.book_id,
-            "author": self.author,
-            "genre": self.genre,
-            "total copies": self.total_cp,
-            "available copies":self.available_cp,
-            "isbn no":self.isbn_no,
-            "publish year":self.publish_year,
-            "shelf":self.shelf
-        }
-
-        save_all_data(data)
-
-    # def remove_book(self,title):
-    #     data = load_all_data()
-
-    #     data.pop(title)
-    #     save_all_data()
-    
-
-
-    @classmethod
-    def view_all_book(cls):
-        data = load_all_data()
-        print(data)
-
-    @classmethod
-    def view_available_books(cls):
-        data = load_all_data()
-        for item in data:
-            if int(item.get("available copies",0)) > 0:
-                print(item)
-
-    @classmethod
-    def view_book_by_genre(cls,genre):
-        data = load_all_data()
-        for item in data:
-            if item.get("genre" , "") == genre:
-                print(item)
-
-
-
-#!Member cls
-
-class Member():
-    pass
-
-
-class Issue_Return():
-    pass
-
-
-class Fine():
-    pass
-
-class Report():
-    pass
-
-class Admin():
     pass
 
 
 
 
 
-#--------------Main Menu---------------------
+
+
 
 while True:
     print('-'*25)

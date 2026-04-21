@@ -1,0 +1,28 @@
+{
+    "vatal": {
+        "balance": 451.43916775341427,
+        "transactions": [
+            "500 deposited | balance: 1500",
+            "1200 withdrawn | balance: 451.43916775341427"
+        ],
+        "account_type": "Saving",
+        "created_at": 10
+    },
+    "honey": {
+        "balance": 500,
+        "transactions": [
+            "2500 withdrawn | balance: -1500",
+            "2000 deposited | balance: 500"
+        ],
+        "account_type": "Current",
+        "overdraft_limit": 6000
+    },
+    "vatsal": {
+        "balance": 1500,
+        "transactions": [
+            "500 deposited | balance: 1500"
+        ],
+        "account_type": "Saving",
+        "created_at": 9
+    }
+}

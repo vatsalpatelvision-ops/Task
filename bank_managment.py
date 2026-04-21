@@ -41,7 +41,8 @@ class BankAccount:
         data[self.name] = {
             "balance": self.balance,
             "transactions": self.transactions,
-            "account_type": self.account_type
+            "account_type": self.account_type,
+            "created_at":self.created_at.hour
         }
 
         save_all_data(data)
@@ -50,7 +51,10 @@ class BankAccount:
         if amount > 0:
             self.balance += amount
             self.transactions.append(f"{amount} deposited | balance: {self.balance}")
+
             self.save()
+            print(f"{amount} deposited | balance: {self.balance}")
+            print()
         else:
             print("Invalid amount")
 
@@ -60,7 +64,10 @@ class BankAccount:
         else:
             self.balance -= amount
             self.transactions.append(f"{amount} withdrawn | balance: {self.balance}")
+
             self.save()
+            print(f"{amount} withdrawn | balance: {self.balance}")
+            print()
 
     def mini_statement(self):
         print("\n--- Mini Statement ---")
@@ -95,12 +102,8 @@ class SavingAccount(BankAccount):
         print(f"Principal: {self.balance:.2f}")
         print(f"Interest Earned (after {self.get_elapsed_hours():.4f} hours): {interest:.4f}")
         print(f"Total Balance: {total:.2f}")
-
-    def withdraw(self, amount):
-        if amount > self.balance:
-            print("Cannot go negative in Saving Account")
-        else:
-            super().withdraw(amount)
+        self.created_at = datetime.now()
+        self.save()
 
 
 class CurrentAccount(BankAccount):
@@ -167,6 +170,7 @@ while True:
         continue
 
     while True:
+        print()
         print("\n1. Check Balance")
         print("2. Deposit")
         print("3. Withdraw")
@@ -177,6 +181,7 @@ while True:
         else:
             print("4. Mini Statement")
             print("5. Exit")
+        print()
 
         ch = int(input("Enter choice: "))
 

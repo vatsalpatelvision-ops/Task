@@ -338,6 +338,7 @@ class Issue_Return():
         self.renewal = 0
         self.book_id = book_id
         self.member_id = member_id
+        self.status = "Issued"
         self.save()
 
 
@@ -393,18 +394,108 @@ class Issue_Return():
         data = load_all_issue()
 
         data[self.issue_id] = {
+            "issue_id":self.issue_id,
             "book":self.book_id,
             "member": self.member_id,
             "issue date": self.issue_date.day,
             "due date": self.due_date.day,
-            "renewal":self.renewal
+            "renewal":self.renewal,
+            "status":self.status
         }
 
         save_all_issue(data)
 
 
-        
+    # @classmethod
+    # def return_book(cls):
+    #     issue_data = load_all_issue()
+    #     book_data = load_all_data()
+    #     member_data = load_all_member()
 
+    #     issue_id = input("Enter book id : ")
+    #     if issue_id not in issue_data:
+    #         print(" Invalid ID")
+    #         return
+        
+    #     # print(issue_id)
+    #     issue = issue_data[issue_id]
+    #     # print(issue)
+    #     # print(book_data[issue['book']])
+    #     book = book_data[issue['book']]
+    #     # print(book['title'])
+    #     member = member_data[issue['member']]
+    #     # print(member)
+
+    #     if issue["status"] == "Return":
+    #         print(f"Book is already Returned ")
+
+    #     #! Due date logic to pay fine is pending
+
+    #     issue["sattus"] = "Return"
+    #     book["available copies"] += 1
+    #     member["issued no of books"] -=1
+    #     # print(type(book['title']))
+    #     # print(type(member["issued book name"]))
+    #     member["issued book name"].remove(str(book['title']))
+
+    #     save_all_data(book_data)
+    #     save_all_member(member_data)
+    #     save_all_issue(issue_data)
+
+    #     #! If time available then do the return using bookid and member id
+
+
+    @classmethod
+    def return_book_by_bookid(self):
+        issue_data = load_all_issue()
+        book_data = load_all_data()
+        member_data = load_all_member()
+        is_issued = False
+        is_member = False
+        issue = None
+
+        book_id = input("Enter book Id : ")
+
+        for iid , i in issue_data.items():
+            if i['book'] == book_id:
+                is_issued = True
+                issue = i
+
+        member_id = input("Enter member id : ")
+
+        for mid , m in issue_data.items():
+            if m['member'] == member_id:
+                is_member = True
+                # member = m
+
+        if is_issued and is_member:
+            print("Return Available")
+            book = book_data[issue['book']]
+            # print(book['title'])
+            member = member_data[issue['member']]
+
+
+            if issue["status"] == "Return":
+                print(f"Book is already Returned ")
+                
+
+            #! Due date logic to pay fine is pending
+
+            issue["status"] = "Return"
+            book["available copies"] += 1
+            member["issued no of books"] -=1
+            # print(type(book['title']))
+            # print(type(member["issued book name"]))
+            member["issued book name"].remove(str(book['title']))
+
+            save_all_data(book_data)
+            save_all_member(member_data)
+            save_all_issue(issue_data)
+
+        else:
+            print("Member does not issued this book")
+            
+        
 
 class Fine():
     pass
@@ -560,8 +651,20 @@ while True:
             
             if issue_ch == 1:
                 Issue_Return.issue_book()
-            else:
+
+            elif issue_ch == 2:
+                Issue_Return.return_book_by_bookid()
+                
+            elif issue_ch == 3:
+                pass
+            elif issue_ch == 4:
+                pass
+            elif issue_ch == 5:
+                pass
+            elif issue_ch == 6:
                 break
+            else:
+                print("Enter Valid Choice : ")
 
     #! Fine menu
     elif choice == 4:

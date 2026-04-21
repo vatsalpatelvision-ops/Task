@@ -8,10 +8,21 @@
         "joining date": 21,
         "exp date": 22,
         "status": "Active",
-        "issued no of books": 1,
-        "issued book name": [
-            "rich dad"
-        ],
+        "issued no of books": 0,
+        "issued book name": [],
+        "fine": 0
+    },
+    "84183eb1": {
+        "member_id": "84183eb1",
+        "name": "honey",
+        "phone": "940",
+        "email": "honey@gmail.com",
+        "member type": "Teacher",
+        "joining date": 21,
+        "exp date": 22,
+        "status": "Active",
+        "issued no of books": 0,
+        "issued book name": [],
         "fine": 0
     }
 }

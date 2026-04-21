@@ -9,6 +9,7 @@ from datetime import datetime , timedelta
 FILE_NAME = "book_data.json"
 MEMBER_DATA = "member_data.json"
 ISSUE_DATA = "issue_data.json"
+FINE_DATA = "fine_data.json"
 
 
 def load_all_member():
@@ -23,13 +24,17 @@ def load_all_issue():
     with open(ISSUE_DATA, "r") as f:
         return json.load(f)
 
-
 def load_all_data():
     if not os.path.exists(FILE_NAME):
         return {}
     with open(FILE_NAME, "r") as f:
         return json.load(f)
 
+def load_all_fine():
+    if not os.path.exists(FINE_DATA):
+        return {}
+    with open(FINE_DATA, "r") as f:
+        return json.load(f)
 
 def save_all_data(data):
     with open(FILE_NAME, "w") as f:
@@ -41,6 +46,10 @@ def save_all_member(data):
 
 def save_all_issue(data):
     with open(ISSUE_DATA, "w") as f:
+        json.dump(data, f, indent=4)
+
+def save_all_fine(data):
+    with open(FINE_DATA, "w") as f:
         json.dump(data, f, indent=4)
 
 
@@ -585,7 +594,95 @@ class Issue_Return():
         pass
 
 class Fine():
-    pass
+    def __init__(self,book_id,member_id):
+        self.fine_id = str(uuid.uuid4())[:8]    
+        self.member_id = member_id
+        self.status = "Pending"
+        self.save()
+
+    def save(self):
+        data = load_all_fine()
+
+        data[self.fine_id] = {
+            "fine_id":self.fine_id,
+            "member_id": self.member_id,
+            "status":self.status
+        }
+
+        save_all_fine(data)
+
+    @classmethod
+    def view_all_fine(self):
+        fine_data = load_all_fine()
+        member_data = load_all_member()
+
+        member_id = []
+        for fin, f in fine_data.items():
+            if f['status'] == "Pending":
+                member_id.append(f['member_id'])
+
+        if member_id:
+            for m in member_id:
+                if m in member_data:
+                    print(f"""
+                        Member name : {member_data[m]['name']}
+                        Pending Fine : {member_data[m]['fine']}
+                    """ )
+
+        else:
+            print("No fine pending")
+        
+
+
+    @classmethod
+    def view_fine_member(self):
+        # fine_data = load_all_fine()
+        member_data = load_all_member()
+
+        member_id = input("Enter member ID to issue : ")
+        if member_id not in member_data:
+            print("Invalid ID")
+            return
+
+        member = member_data[member_id]
+        if member['fine'] > 0:
+            print(f"Pending fine for {member['name']} is {member['fine']}")
+        else:
+            print(f"No pending fine for {member['name']}")
+
+    @classmethod
+    def pay_fine_member(self):
+        fine_data = load_all_fine()
+        member_data = load_all_member()
+        fine = None
+        member_id = input("Enter member ID to issue : ")
+        if member_id not in member_data:
+            print("Invalid ID")
+            return
+
+        for fid,f in fine_data.items():
+            if f['member_id'] == member_id:
+                fine = f
+
+        member = member_data[member_id]
+
+        # print(fine)
+        if fine["status"] == "Pending":
+            fine["status"] = "Paid"
+            member["fine"] = 0
+
+        else:
+            print(f"No due fine for {member['name']}")
+
+
+        save_all_member(member_data)
+        save_all_fine(fine_data)
+        # member = member_data[member_id]
+        # print(f"Pending fine for {member['name']} is {member['fine']}")
+
+
+        
+        
 
 class Report():
     pass
@@ -770,9 +867,17 @@ while True:
             fine_ch = int(input("Enter your choice : "))
             
             if fine_ch == 1:
+                Fine.view_fine_member()
+            elif fine_ch == 2:
+                Fine.pay_fine_member()
+            elif fine_ch == 3:
+                Fine.view_all_fine()
+            elif fine_ch == 4:
                 pass
-            else:
+            elif fine_ch == 5:
                 break
+            else:
+                print("Select Valid option : dd")
 
     #!Reports & Search menu
     elif choice == 5:

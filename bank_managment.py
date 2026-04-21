@@ -1,140 +1,83 @@
-"""
-BankAccount class with deposit, withdraw, balance check, mini statement
-SavingAccount (inherits) — adds interest calculation, No negative balance allowed
-CurrentAccount (inherits) — adds overdraft limit(can go negative up to a limit)
-Storing last 5 transactions as mini statement
-"""
-
-##Vatsalpatel github
-
-from datetime import datetime,timedelta
+from datetime import datetime , timedelta
 import json
 import os
 
-def _load_all_data_global():
-    """Loads all accounts from JSON file."""
-    if not os.path.exists('bank_data.json'):
+FILE_NAME = "bank_data.json"
+
+
+def load_all_data():
+    if not os.path.exists(FILE_NAME):
         return {}
-    with open('bank_data.json', 'r') as f:
+    with open(FILE_NAME, "r") as f:
         return json.load(f)
 
-def saving_acc_choice():
-    print()
-    print("Enter 1 To Check balance ")
-    print("Enter 2 To Deposite money ")
-    print("Enter 3 To Withdraw Money ")
-    print("Enter 4 To Calculate interest ")
-    print("Enter 5 For mini statement ")
-    print("Enter 6 to exit system ")
-    print()
+
+def save_all_data(data):
+    with open(FILE_NAME, "w") as f:
+        json.dump(data, f, indent=4)
 
 
-
-def current_acc_choice():
-    print()
-    print("Enter 1 To Check balance ")
-    print("Enter 2 To Deposite money ")
-    print("Enter 3 To Withdraw/overdraft Money ")
-    # print("Enter 4 To overdraft money ")
-    print("Enter 4 For mini statement ")
-
-    print("Enter 5 to exit system ")
-    print()
-
-
-class BankAccount():
-
-    def __init__(self, name, balance,account_type,file_name="bank_data.json"):
+class BankAccount:
+    def __init__(self, name, balance, account_type):
         self.name = name
         self.balance = balance
         self.account_type = account_type
         self.transactions = []
-        self.filename = file_name
         self.created_at = datetime.now() - timedelta(hours=1)
-        # self._save_to_json()
 
-        data = self._load_all_data()
+        data = load_all_data()
 
         if name in data:
-            print("Existing user found. Loading account...")
+            print("Existing user found.")
             self.balance = data[name]["balance"]
             self.transactions = data[name]["transactions"]
-        else :
-            print("New User ")
-            # amount = int(input("Enter your First deposite amount : "))
+        else:
+            print("New user created.")
+            self.save()
 
-            self.balance = balance
-            self._save_to_json()
+    def save(self):
+        data = load_all_data()
 
-    def _load_all_data(self):
-        """Loads all accounts from JSON file."""
-        if not os.path.exists(self.filename):
-            return {}
-        with open(self.filename, 'r') as f:
-            return json.load(f)
-
-    def _save_to_json(self):
-        """Saves current instance state to JSON file."""
-        data = self._load_all_data()
         data[self.name] = {
-            "name": self.name,
             "balance": self.balance,
             "transactions": self.transactions,
-            "acc_type": self.account_type
-
+            "account_type": self.account_type
         }
 
-        # if self.account_type == "Current":
-        #     data[self.name]["overdraft"] = self.overdraft
-        with open(self.filename, 'w') as f:
-            json.dump(data, f, indent=4)
+        save_all_data(data)
 
-
-    def deposit(self,amount):
-        """Deposit the amount"""
+    def deposit(self, amount):
         if amount > 0:
             self.balance += amount
-            self.transactions.append(f"{amount} deposited | balance is : {self.balance}")
-            self._save_to_json()
-            print(f"{amount} deposited. New balance is : {self.balance}")
+            self.transactions.append(f"{amount} deposited | balance: {self.balance}")
+            self.save()
         else:
             print("Invalid amount")
 
-    def withdraw(self,amount):
-        "Withdraw the money"
+    def withdraw(self, amount):
         if amount > self.balance:
-            print("Not enough money ")
+            print("Insufficient balance")
         else:
-            print(f"{amount} is withdrawn ")
             self.balance -= amount
-            self.transactions.append(f"{amount} Withdrawn | balance is : {self.balance}")
-            self._save_to_json()
-            print(f"New balance is : {self.balance}")
+            self.transactions.append(f"{amount} withdrawn | balance: {self.balance}")
+            self.save()
 
     def mini_statement(self):
-        print("--Mini Statement--")
-        last_5 = self.transactions[-5:]
-        for transaction in last_5:
-            print(transaction)
-        print(f"Current Balance: {self.balance:.2f}")
-        print("-----------------------------------\n")
+        print("\n--- Mini Statement ---")
+        for t in self.transactions[-5:]:
+            print(t)
+        print(f"Balance: {self.balance}")
+        print("----------------------\n")
 
-        
-
-    def balance_check(self):
-        print(f"Available Balance {self.balance}")
+    def check_balance(self):
+        print(f"Balance: {self.balance}")
 
 
 class SavingAccount(BankAccount):
-    interest_percentage = 10
     def __init__(self, name, balance,annual_rate=10):
-        
-        super().__init__(name,balance,account_type="Saving")
-        # self.account_type = account_type
-        self.annual_rate = annual_rate 
+        self.annual_rate = annual_rate
+        super().__init__(name, balance, "Saving")
 
-        # self.created_at = datetime.now() - timedelta(hours=1)
-    
     def get_elapsed_hours(self):
         now = datetime.now()
         duration = now - self.created_at
@@ -153,142 +96,115 @@ class SavingAccount(BankAccount):
         print(f"Interest Earned (after {self.get_elapsed_hours():.4f} hours): {interest:.4f}")
         print(f"Total Balance: {total:.2f}")
 
-class CurrentAccount(BankAccount):
-    overdraf_limit = 5000
-    def __init__(self, name, balance,overdraft=5000):
-        super().__init__(name,balance,account_type="Current")
-        # self.created_at = datetime.now() - timedelta(hours=1)
-        self.overdraft = overdraft
+    def withdraw(self, amount):
+        if amount > self.balance:
+            print("Cannot go negative in Saving Account")
+        else:
+            super().withdraw(amount)
 
-    def _save_to_json(self):
-        """Saves current instance state to JSON file."""
-        data = self._load_all_data()
+
+class CurrentAccount(BankAccount):
+    def __init__(self, name, balance, overdraft_limit=5000):
+        self.overdraft_limit = overdraft_limit
+        super().__init__(name, balance, "Current")
+
+        # load overdraft if exists
+        data = load_all_data()
+        if name in data and "overdraft_limit" in data[name]:
+            self.overdraft_limit = data[name]["overdraft_limit"]
+
+        self.save()
+
+    def save(self):
+        data = load_all_data()
+
         data[self.name] = {
-            "name": self.name,
             "balance": self.balance,
             "transactions": self.transactions,
-            "acc_type": self.account_type
-
+            "account_type": self.account_type,
+            "overdraft_limit": self.overdraft_limit
         }
 
-        if self.account_type == "Current":
-            data[self.name]["overdraft"] = self.overdraft
-        with open(self.filename, 'w') as f:
-            json.dump(data, f, indent=4)
+        save_all_data(data)
 
-
-    def overdraft(self, amount):
+    def withdraw(self, amount):
         if amount <= self.balance:
-            self.withdraw(amount)
-
-        elif amount <= self.balance + self.overdraf_limit:
             self.balance -= amount
-            print(f"Overdraft used . New balance {self.balance}")
-        else:
-            print("Withdrawal denied. Exceeds overdraft limit")
 
+        elif amount <= self.balance + self.overdraft_limit:
+            self.balance -= amount
+            print("Overdraft used")
+
+        else:
+            print("Exceeded overdraft limit")
+            return
+
+        self.transactions.append(f"{amount} withdrawn | balance: {self.balance}")
+        self.save()
 
 
 while True:
-    print("Hello User , What type of account you want to create : ")
-    print("Enter 1 for the Saving account (min balance : 1000)")
-    print("Enter 2 for the Current account (min balance : 1000)")
-    print("Enter 3 for exit ")
-    user_ch = int(input("Enter your chocie : "))
+    print("\n1. Saving Account")
+    print("2. Current Account")
+    print("3. Exit")
 
-    if user_ch == 1:
-        data = _load_all_data_global()
-        name = input("Enter your name : ")
+    choice = int(input("Enter choice: "))
 
-        if name in data:
-            # print("Existing user found. Loading account...")
-            balance = data[name]["balance"]
-            transactions = data[name]["transactions"]
-            obj1 = SavingAccount(name,balance,account_type="Saving")
+    if choice == 1:
+        name = input("Enter name: ")
+        amount = int(input("Enter initial amount: "))
+        acc = SavingAccount(name, amount)
 
-        else:
-            # print("New User")
-            amount = int(input("Enter your First deposite amount : "))
+    elif choice == 2:
+        name = input("Enter name: ")
+        amount = int(input("Enter initial amount: "))
+        limit = int(input("Enter overdraft limit: "))
+        acc = CurrentAccount(name, amount, limit)
 
-            obj1 = SavingAccount(name,amount)
-
-        while True:
-            saving_acc_choice()
-            saving_ch = int(input("Enter your choice : "))
-
-            if saving_ch == 1 :
-                obj1.balance_check()
-
-            elif saving_ch == 2:
-                amount = int(input("Enter the amount to deposite : "))
-                obj1.deposit(amount)
-            
-            elif saving_ch == 3:
-                amount = int(input("Enter the amount to Withdraw : "))
-
-                obj1.withdraw(amount)
-
-            elif saving_ch == 4:
-               obj1.display_balance_with_interest()
-
-            elif saving_ch ==5:
-                obj1.mini_statement()
-
-            elif saving_ch ==6:
-                break
-            else:
-                print("Select valid option : ")
-
-
-    elif user_ch ==2:
-        data = _load_all_data_global()
-        name = input("Enter your name : ")
-
-        if name in data:
-            # print("Existing user found. Loading account...")
-            balance = data[name]["balance"]
-            transactions = data[name]["transactions"]
-            obj1 = CurrentAccount(name,balance,account_type="Current")
-        
-
-        else:
-            # print("New User")
-            amount = int(input("Enter your First deposite amount : "))
-            overdraft = int(input("Enter the overdraft limit : "))
-            obj1 = CurrentAccount(name,amount,overdraft)
-
-        while True:
-            current_acc_choice()
-            current_ch = int(input("Enter your choice : "))
-
-
-            if current_ch == 1 :
-                obj1.balance_check()
-
-            elif current_ch == 2:
-                amount = int(input("Enter the amount to deposite : "))
-                obj1.deposit(amount)
-        
-
-            elif current_ch == 3:
-                amount = int(input("Enter the amount to Withdraw : "))
-                obj1.overdraft(amount)
-
-            elif current_ch ==4:
-                obj1.mini_statement()
-
-            elif current_ch ==5:
-                break
-
-            else:
-                print("Select valid option : ")
-
-    elif user_ch == 3:
+    elif choice == 3:
         break
-
     else:
-        print("Select Valid option")
+        continue
 
+    while True:
+        print("\n1. Check Balance")
+        print("2. Deposit")
+        print("3. Withdraw")
+        if choice==1:
+            print("4. Interest Calculation")
+            print("5 . Mini Statement")
+            print("6. Exit")
+        else:
+            print("4. Mini Statement")
+            print("5. Exit")
 
+        ch = int(input("Enter choice: "))
 
+        if ch == 1:
+            acc.check_balance()
 
+        elif ch == 2:
+            amt = int(input("Amount: "))
+            acc.deposit(amt)
+
+        elif ch == 3:
+            amt = int(input("Amount: "))
+            acc.withdraw(amt)
+
+        elif ch == 4 and choice == 2:
+            acc.mini_statement()
+
+        elif ch == 5 and choice ==2:
+            break
+
+        elif ch == 4 and choice == 1:
+            acc.display_balance_with_interest()
+
+        elif ch == 5 and choice ==1:
+
+            acc.mini_statement()
+
+        elif ch == 6 and choice == 1:
+            break
+
+        

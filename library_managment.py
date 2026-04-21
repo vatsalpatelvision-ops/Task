@@ -25,6 +25,8 @@ class Books():
 
         if title in data:
             print("Existing Book Found")
+            self.book_id = data[title]["bookid"]
+            self.title = data[title]
             self.author = data[title]["author"]
             self.genre = data[title]["genre"]
             self.total_cp = data[title]["total copies"]
@@ -63,8 +65,43 @@ class Books():
 
         save_all_data(data)
 
-    def remove_book(self):
-        pass
+    # def remove_book(self,title):
+    #     data = load_all_data()
+
+    #     data.pop(title)
+    #     save_all_data()
+    
+
+
+    @classmethod
+    def view_all_book(cls):
+        data = load_all_data()
+        print(data)
+
+    @classmethod
+    def view_available_books(cls):
+        data = load_all_data()
+        for item in data:
+            if int(item.get("available copies",0)) > 0:
+                print(item)
+
+    @classmethod
+    def view_book_by_genre(cls,genre):
+        data = load_all_data()
+        for item in data:
+            if item.get("genre" , "") == genre:
+                print(item)
+
+
+
+#!Member cls
+
+class Member():
+    pass
+
+
+
+
 
 
 
@@ -84,6 +121,7 @@ while True:
 
     choice = int(input("Enter your Choice : "))
 
+    #! book managment system
     if choice == 1:
         while True:        
             print('-'*25)
@@ -114,9 +152,45 @@ while True:
 
                 book1 = Books(title, author, genre, total_copies, available_copies, isbn_no, publication_year, shelf)
 
+            elif book_ch ==2:
+                title = input("Enter the title to remove the book : ")
+                data = load_all_data()
+                if title in data:
+                    # book_id = data[title]["bookid"]
+                    # title = data[title]
+                    author = data[title]["author"]
+                    genre = data[title]["genre"]
+                    total_cp = data[title]["total copies"]
+                    available_cp = data[title]["available copies"]
+                    isbn_no = data[title]["isbn no"]
+                    publish_year = data[title]["publish year"]
+                    shelf = data[title]["shelf"]
+                    book1 = Books(title,author,genre,total_cp,available_cp,isbn_no,publish_year,shelf)
+
+                    book1.remove_book(title)
+                else:
+                    print("No book exsits")
+                
+
+            elif book_ch == 4:
+                
+                Books.view_all_book()
+
+            elif book_ch == 5:
+                Books.view_available_books()
+
+            elif book_ch == 6:
+                genre = input("Enter the genre : ")
+                Books.view_book_by_genre(genre)
+
             else:
                 break
             
+
+
+    #! Member managment system
+
+
 
     else:
         break

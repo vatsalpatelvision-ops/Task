@@ -469,7 +469,7 @@ class Issue_Return():
                 # member = m
 
         if is_issued and is_member:
-            print("Return Available")
+            # print("Return Available")
             book = book_data[issue['book']]
             # print(book['title'])
             member = member_data[issue['member']]
@@ -492,10 +492,97 @@ class Issue_Return():
             save_all_member(member_data)
             save_all_issue(issue_data)
 
+            print("Book has been successfully returned")
+
         else:
             print("Member does not issued this book")
-            
-        
+
+
+    @classmethod
+    def renew_book_by_bookid(self):
+        issue_data = load_all_issue()
+        book_data = load_all_data()
+        member_data = load_all_member()
+        is_issued = False
+        is_member = False
+        issue = None
+
+        book_id = input("Enter book Id : ")
+
+        for iid , i in issue_data.items():
+            if i['book'] == book_id:
+                is_issued = True
+                issue = i
+
+        member_id = input("Enter member id : ")
+
+        for mid , m in issue_data.items():
+            if m['member'] == member_id:
+                is_member = True
+                # member = m
+
+        if is_issued and is_member:
+            print("Return Available")
+            book = book_data[issue['book']]
+            # print(book['title'])
+            member = member_data[issue['member']]
+
+
+            if issue["status"] == "Return":
+                print(f"Book is already Returned ")
+                
+
+            #! Due date logic to pay fine is pending
+
+            elif issue["renewal"] >= 1:
+                print("Already one time Renewed. Now you can not renew this book !")
+                return
+
+            issue["status"] = "Issued"
+            issue["renewal"] +=1 
+            issue["issue date"] = datetime.now().day
+            issue["due date"] = (datetime.now() + timedelta(days=7)).day
+            # book["available copies"] += 1
+            # member["issued no of books"] -=1
+            # print(type(book['title']))
+            # print(type(member["issued book name"]))
+            # member["issued book name"].remove(str(book['title']))
+
+            save_all_data(book_data)
+            save_all_member(member_data)
+            save_all_issue(issue_data)
+
+            print("Book Renewed")
+            print()
+
+        else:
+            print("Member does not issued this book")
+    
+    @classmethod
+    def view_all_issued(self):
+        issue_data = load_all_issue()
+        book_data = load_all_data()
+        book_id = []
+        for iid , i in issue_data.items():
+            if i['status'] == "Issued":
+                book_id.append(i['book'])
+
+
+        if book_id:
+            for b in book_id:
+                if b in book_data:
+                    print(f"""
+                        Book name : {book_data[b]['title']}
+                        Available Copies : {book_data[b]['available copies']}
+                        Total Copies : {book_data[b]['total copies']}
+                    """ )
+        else:
+            print("No book is currently issued")
+            print()
+
+    #! Logic for overdue book is pending
+    def view_overdue_books(self):
+        pass
 
 class Fine():
     pass
@@ -656,9 +743,10 @@ while True:
                 Issue_Return.return_book_by_bookid()
                 
             elif issue_ch == 3:
-                pass
+                Issue_Return.renew_book_by_bookid()
             elif issue_ch == 4:
-                pass
+                Issue_Return.view_all_issued()
+
             elif issue_ch == 5:
                 pass
             elif issue_ch == 6:

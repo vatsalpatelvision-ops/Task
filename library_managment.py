@@ -2,6 +2,8 @@
 import uuid
 import os
 import json
+import csv
+
 
 FILE_NAME = "book_data.json"
 
@@ -17,44 +19,29 @@ def save_all_data(data):
     with open(FILE_NAME, "w") as f:
         json.dump(data, f, indent=4)
 
-def load_file_enter(filename):
-    if not os.path.exists(file_name):
-        return {}
-    with open(file_name, "r") as f:
-        return json.load(f)
 
 
 class Books():
     def __init__(self, title, author, genre, total_cp, available_cp, isbn_no, publish_year, shelf):
-        
-
         data = load_all_data()
 
-        if title in data:
-            print("Existing Book Found")
-            self.book_id = data[title]["bookid"]
-            self.title = data[title]
-            self.author = data[title]["author"]
-            self.genre = data[title]["genre"]
-            self.total_cp = data[title]["total copies"]
-            self.available_cp = data[title]["available copies"]
-            self.isbn_no = data[title]["isbn no"]
-            self.publish_year = data[title]["publish year"]
-            self.shelf = data[title]["shelf"]
-        else:
-            self.book_id = str(uuid.uuid4())[:8]    
-            print("New Book")
-            self.title = title
-            self.author = author
-            self.genre = genre
-            self.total_cp = total_cp
-            self.available_cp = available_cp
-            self.isbn_no = isbn_no
-            self.publish_year = publish_year
-            self.shelf = shelf
-            self.save()
+        for b in data.values():
+            if b["title"].lower() == title.lower():
+                print("Book already exists")
+                return
 
-
+    
+        self.book_id = str(uuid.uuid4())[:8]    
+        self.title = title
+        self.author = author
+        self.genre = genre
+        self.total_cp = total_cp
+        self.available_cp = available_cp
+        self.isbn_no = isbn_no
+        self.publish_year = publish_year
+        self.shelf = shelf
+        self.save()
+        print(f"New Book with id : {self.book_id}")
 
     def save(self):
         data = load_all_data()
@@ -72,32 +59,143 @@ class Books():
 
         save_all_data(data)
 
-    # def remove_book(self,title):
-    #     data = load_all_data()
 
-    #     data.pop(title)
-    #     save_all_data()
-    
+    @classmethod
+    def update_book(cls):
+        data = load_all_data()
+
+        book_id = input("Enter Book ID: ")
+
+        if book_id not in data:
+            print(" Invalid ID")
+            return
+
+        book = data[book_id]
+
+        print("Leave blank to keep old value")
+
+        new_title = input("New title: ")
+        new_author = input("New author: ")
+        new_genre = input("New genre: ")
+        new_total = input("New total copies: ")
+
+        if new_title:
+            book["title"] = new_title
+        if new_author:
+            book["author"] = new_author
+        if new_genre:
+            book["genre"] = new_genre
+        if new_total:
+            diff = int(new_total) - int(book["total copies"])
+            book["total copies"] = int(new_total)
+            book["available copies"] = (diff + int(book["available copies"]))
+
+        save_all_data(data)
+        print(" Updated successfully")
+
+
+    @classmethod
+    def remove_book(cls):
+        data = load_all_data()
+
+        if not data:
+            print(" No books available")
+            return
+
+        # show books
+        # for bid, b in data.items():
+        #     print(f"{bid} -> {b['title']}")
+
+        book_id = input("Enter Book ID to remove: ")
+
+        if book_id not in data:
+            print(" Invalid Book ID")
+            return
+
+        # if int(data[book_id]["available copies"]) < int(data[book_id]["total copies"]):
+        #     print("Cannot delete issued book")
+        #     return
+
+        data.pop(book_id)
+        save_all_data(data)
+
+        print(" Book removed")
 
 
     @classmethod
     def view_all_book(cls):
         data = load_all_data()
-        print(data)
+
+        if not data:
+            print("No books available")
+
+        for bid , b in data.items():
+            print(f"""
+            Book id : {bid}
+            Book title : {b['title']}
+            Book author : {b['author']} 
+            Available Copies : {b['available copies']}
+            """)
 
     @classmethod
     def view_available_books(cls):
         data = load_all_data()
-        for item in data:
-            if int(item.get("available copies",0)) > 0:
-                print(item)
+
+        found = False
+        for bid, b in data.items():
+            if int(b["available copies"]) > 0:
+                print(f"{bid} | {b['title']} ({b['available copies']} available)")
+                found = True
+
+        if not found:
+            print(" No available books")
 
     @classmethod
-    def view_book_by_genre(cls,genre):
+    def view_books_genre(cls,genre):
         data = load_all_data()
-        for item in data:
-            if item.get("genre" , "") == genre:
-                print(item)
+
+        found = False
+        for bid, b in data.items():
+            if b['genre'].lower() == genre.lower():
+                print(f"{bid} | {b['title']}")
+                found = True
+
+        if not found:
+            print(" No available books")
+
+    # @classmethod
+    # def import_csv(cls):
+    #     filename = input("Enter CSV file: ")
+
+    #     if not os.path.exists(filename):
+    #         print(" File not found")
+    #         return
+
+    #     data = load_all_data()
+
+    #     with open(filename, newline="") as f:
+    #         reader = csv.DictReader(f)
+
+    #         for row in reader:
+    #             duplicate = False
+    #             for b in data.values():
+    #                 if b["isbn no"] == row["isbn"]:
+    #                     duplicate = True
+    #                     break
+
+    #             if not duplicate:
+    #                 book = Books(
+    #                     row["title"],
+    #                     row["author"],
+    #                     row["genre"],
+    #                     row["total"],
+    #                     row["isbn"],
+    #                     row["year"],
+    #                     row["location"]
+    #                 )
+
+    #     print("CSV import done")
+
 
 
 
@@ -169,31 +267,11 @@ while True:
                 book1 = Books(title, author, genre, total_copies, available_copies, isbn_no, publication_year, shelf)
 
             elif book_ch ==2:
-                title = input("Enter the title to remove the book : ")
-                data = load_all_data()
-                book_exit = False
-                for item in data:
-                    if item.get("title") == title:
-                        book_exist = True
-
-
-
-                if book_exist:
-                    # book_id = data[title]["bookid"]
-                    # title = data[title]
-                    author = data[title]["author"]
-                    genre = data[title]["genre"]
-                    total_cp = data[title]["total copies"]
-                    available_cp = data[title]["available copies"]
-                    isbn_no = data[title]["isbn no"]
-                    publish_year = data[title]["publish year"]
-                    shelf = data[title]["shelf"]
-                    book1 = Books(title,author,genre,total_cp,available_cp,isbn_no,publish_year,shelf)
-
-                    book1.remove_book(title)
-                else:
-                    print("No book exsits")
+                Books.remove_book()
                 
+            elif book_ch == 3:
+                Books.update_book()
+
 
             elif book_ch == 4:
                 
@@ -204,26 +282,18 @@ while True:
 
             elif book_ch == 6:
                 genre = input("Enter the genre : ")
-                Books.view_book_by_genre(genre)
+                Books.view_books_genre(genre)
 
             elif book_ch == 7:
-                file_name = input("Enter the file name : ")
-                # if not os.path.exists(file_name):
-                #     return {}
-                # with open(file_name, "r") as f:
-                #     return json.load(f)
-                original_data = load_all_data()
-                data = load_file_enter(file_name)
-                original_data.append(data)
-
-                save_all_data(original_data)
-
+                # Books.import_csv()
+                pass
+            
+            elif book_ch == 8:
+                break
 
             else:
-                break
+                print("Select valid option")
             
-
-
     #! Member managment system
 
     elif choice == 2:

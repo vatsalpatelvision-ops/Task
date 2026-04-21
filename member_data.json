@@ -1,11 +1,17 @@
 {
-    "8a0273f7": {
+    "9a2c9db3": {
+        "member_id": "9a2c9db3",
         "name": "vatsal",
         "phone": "7984363079",
         "email": "vatsal123@gmail.com",
         "member type": "Student",
         "joining date": 21,
         "exp date": 22,
-        "status": "Active"
+        "status": "Active",
+        "issued no of books": 1,
+        "issued book name": [
+            "rich dad"
+        ],
+        "fine": 0
     }
 }

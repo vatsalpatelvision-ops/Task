@@ -8,12 +8,19 @@ from datetime import datetime , timedelta
 
 FILE_NAME = "book_data.json"
 MEMBER_DATA = "member_data.json"
+ISSUE_DATA = "issue_data.json"
 
 
 def load_all_member():
     if not os.path.exists(MEMBER_DATA):
         return {}
     with open(MEMBER_DATA, "r") as f:
+        return json.load(f)
+
+def load_all_issue():
+    if not os.path.exists(ISSUE_DATA):
+        return {}
+    with open(ISSUE_DATA, "r") as f:
         return json.load(f)
 
 
@@ -32,6 +39,9 @@ def save_all_member(data):
     with open(MEMBER_DATA, "w") as f:
         json.dump(data, f, indent=4)
 
+def save_all_issue(data):
+    with open(ISSUE_DATA, "w") as f:
+        json.dump(data, f, indent=4)
 
 
 class Books():
@@ -60,6 +70,7 @@ class Books():
         data = load_all_data()
 
         data[self.book_id] = {
+            "book_id":self.book_id,
             "title":self.title,
             "author": self.author,
             "genre": self.genre,
@@ -239,13 +250,17 @@ class Member():
         data = load_all_member()
 
         data[self.member_id] = {
+            "member_id":self.member_id,
             "name":self.name,
             "phone": self.phone,
             "email": self.email,
             "member type": self.member_type,
             "joining date":self.join_date.day,
             "exp date":self.exp_date.day,
-            "status" : self.status
+            "status" : self.status,
+            "issued no of books":0,
+            "issued book name":[],
+            "fine" : 0
         }
 
         save_all_member(data)
@@ -316,7 +331,79 @@ class Member():
 
 
 class Issue_Return():
-    pass
+    def __init__(self,book_id,member_id):
+        self.issue_id = str(uuid.uuid4())[:8]    
+        self.issue_date = datetime.now()
+        self.due_date = datetime.now() + timedelta(days=7)
+        self.renewal = 0
+        self.book_id = book_id
+        self.member_id = member_id
+        self.save()
+
+
+    @classmethod
+    def issue_book(self):
+        book_data = load_all_data()
+        member_data = load_all_member()
+        book_id = input("Enter book ID to issue : ")
+
+        if book_id not in book_data:
+            print(" Invalid ID")
+            return
+
+        member_id = input("Enter member ID to issue : ")
+        if member_id not in member_data:
+            print("Invalid ID")
+            return
+        
+        book = book_data[book_id]
+        member = member_data[member_id]
+
+        if (member["issued no of books"] >= 2 and member["member type"] == "Student") or (member["issued no of books"] >= 5 and member["member type"] == "Teacher") or (member["issued no of books"] >= 1 and member["member type"] == "External"):
+            print("You already issued all the books you can !! return 1 book to issue new book !")
+
+        elif member["status"] == "Deactivate":
+            print("Your Status is deactivated. You can't issue book")
+
+        elif member["fine"] > 0 :
+            print(f"You have unpaid fine of {member["fine"]} , pay the amount first to issue the book")
+        
+        elif book["available copies"] <=0 :
+            print(f"No copies available for the book {book["title"]}")
+
+        for b in member["issued book name"]:
+            if book["title"] == b:
+                print("you already have that book")
+                return
+
+        # print(book)
+        member["issued no of books"] += 1
+        member["issued book name"].append(book["title"])
+        book["available copies"] -= 1
+        
+        save_all_data(book_data)
+        save_all_member(member_data)
+
+
+        obj = Issue_Return(book['book_id'] , member['member_id'])
+
+
+        
+    def save(self):
+        data = load_all_issue()
+
+        data[self.issue_id] = {
+            "book":self.book_id,
+            "member": self.member_id,
+            "issue date": self.issue_date.day,
+            "due date": self.due_date.day,
+            "renewal":self.renewal
+        }
+
+        save_all_issue(data)
+
+
+        
 
 
 class Fine():
@@ -435,10 +522,13 @@ while True:
 
             elif member_ch == 2:
                 Member.remove_member()
+
             elif member_ch == 3:
                 Member.update_member()
+
             elif member_ch == 4:
                 Member.view_all_member()
+
             elif member_ch == 5:
                 pass
             elif member_ch == 6:
@@ -469,7 +559,7 @@ while True:
             issue_ch = int(input("Enter your choice : "))
             
             if issue_ch == 1:
-                pass
+                Issue_Return.issue_book()
             else:
                 break
 

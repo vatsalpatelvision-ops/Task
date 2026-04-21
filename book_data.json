@@ -1,11 +1,12 @@
 {
-    "fa2c5d0c": {
+    "48c7370d": {
+        "book_id": "48c7370d",
         "title": "rich dad",
-        "author": "honey",
+        "author": "robort",
         "genre": "finance",
-        "total copies": 7,
-        "available copies": 7,
-        "isbn no": 5,
+        "total copies": 5,
+        "available copies": 4,
+        "isbn no": 5656,
         "publish year": 2004,
         "shelf": "a13"
     }

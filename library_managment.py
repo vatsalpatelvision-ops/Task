@@ -984,8 +984,28 @@ class Issue_Return(Admin):
             print()
 
     #! Logic for overdue book is pending
+    @classmethod
     def view_overdue_books(self):
-        pass
+        issue_data = load_all_issue()
+        book_data = load_all_data()
+        count = 0 
+        for iid, issue in issue_data.items():
+            # print("Inside the loop")
+            loaded_issue = datetime.fromisoformat(issue['issue date'])
+            loaded_due = datetime.fromisoformat(issue['due date'])
+
+            today = datetime.now()
+            diff = today - loaded_due
+
+            if diff.days > 0:
+                book_id = issue["book"]
+                book = book_data[book_id]
+
+                print(f"{book["title"]} is due from {diff.days}")
+                count += 1
+        
+        if count <= 1:
+            print("No book is overdue")
 
 
         
@@ -1062,8 +1082,6 @@ class Report():
                 print(f"{b["title"]}")
         else:
             print("All books have been issued once")
-
-
 
 
 #--------------Main Menu---------------------
@@ -1219,7 +1237,7 @@ while True:
                 Issue_Return.view_all_issued()
 
             elif issue_ch == 5:
-                pass
+                Issue_Return.view_overdue_books()
             elif issue_ch == 6:
                 break
             else:

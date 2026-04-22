@@ -1,28 +1,6 @@
 {
-    "48c7370d": {
-        "book_id": "48c7370d",
-        "title": "rich dad",
-        "author": "robort",
-        "genre": "finance",
-        "total copies": 5,
-        "available copies": 5,
-        "isbn no": "5656",
-        "publish year": 2004,
-        "shelf": "a13"
-    },
-    "3175462a": {
-        "book_id": "3175462a",
-        "title": "poor dad",
-        "author": "robort",
-        "genre": "finance",
-        "total copies": 5,
-        "available copies": 5,
-        "isbn no": "3333",
-        "publish year": 2001,
-        "shelf": "b12"
-    },
-    "94c33cf2": {
-        "book_id": "94c33cf2",
+    "9e0f271e": {
+        "book_id": "9e0f271e",
         "title": "ikigai",
         "author": "harsh",
         "genre": "heath",
@@ -32,15 +10,15 @@
         "publish year": 2004,
         "shelf": "Q12"
     },
-    "ee837643": {
-        "book_id": "ee837643",
-        "title": "think rich",
+    "0c16b87f": {
+        "book_id": "0c16b87f",
+        "title": "rich dad",
         "author": "kiyosaki",
         "genre": "finance",
-        "total copies": 5,
+        "total copies": 4,
         "available copies": 4,
-        "isbn no": 7890,
-        "publish year": 2002,
-        "shelf": "E12"
+        "isbn no": 4545,
+        "publish year": 2004,
+        "shelf": "A12"
     }
 }

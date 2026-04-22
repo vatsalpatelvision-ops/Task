@@ -83,6 +83,7 @@ class Admin():
     student_book = admin_rule['student_book']
     teacher_book = admin_rule['teacher_book']
     external_book = admin_rule['external_book']
+    lost_fine = admin_rule['lost_book']
     def __init__(self):
         pass
 
@@ -190,6 +191,19 @@ class Admin():
         self.admin_rule['max_issue_days'] = new_days
 
         print(f"New max issue days is {Admin.max_issue_days}")
+
+        save_all_admin(self.admin_rule)
+
+    @classmethod
+    def change_lost_book_fine(self):
+        # admin_rule = load_all_admin()
+        # max_issue_days = admin_rue['max_issue_days']
+        print(f"Current Lost book fine : {Admin.lost_fine}")
+        new_fine = int(input("Enter new days you want to set : "))
+        Admin.lost_fine = new_fine
+        self.admin_rule['lost_book'] = new_fine
+
+        print(f"New max issue days is {Admin.lost_fine}")
 
         save_all_admin(self.admin_rule)
 
@@ -605,7 +619,7 @@ class Fine():
             "fine_id":self.fine_id,
             "member_id": self.member_id,
             "status":self.status,
-            "anooubt":self.amount
+            "amount":self.amount
         }
 
         save_all_fine(data)
@@ -670,6 +684,8 @@ class Fine():
             fine["status"] = "Paid"
             fine["amount"] = member["fine"]
             member["fine"] = 0
+
+            print(f"Fine Has been paid ")
 
         else:
             print(f"No due fine for {member['name']}")
@@ -1153,13 +1169,13 @@ class Report():
     @classmethod
     def overdue_report(cls):
         issue_data = load_all_issue()
-        book_data = load_all_book()
+        book_data = load_all_data()
 
         print(" Overdue Book Reports : ")
 
         not_due = True
 
-        for i in issue_data.value():
+        for i in issue_data.values():
             if i['status'] == "Issued":
                 due = datetime.fromisoformat(i['due date'])
                 today = datetime.now()
@@ -1429,7 +1445,8 @@ while True:
                   "3. Change max books per membership type",
                   "4. View system stats (total books, members, issued, fines collected)",
                   "5. Backup data (copy JSON to backup folder with timestamp)",
-                  "6. Back",
+                  "6. Change lost book Fine",
+                  "7. Back",
                     sep="\n"
                     )
             print('-'*25)
@@ -1453,6 +1470,9 @@ while True:
                 Admin.backup_data()
 
             elif admin_ch == 6:
+                Admin.change_lost_book_fine()
+
+            elif admin_ch == 7:
                 break
             else:
                 print("Select Valid option ")

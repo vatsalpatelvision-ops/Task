@@ -1,14 +1,8 @@
 {
-    "dfd776e4": {
-        "fine_id": "dfd776e4",
-        "member_id": "dfa54855",
-        "status": "Pending",
-        "anooubt": 300
-    },
-    "35bb9089": {
-        "fine_id": "35bb9089",
-        "member_id": "818e9eea",
-        "status": "Pending",
-        "anooubt": 300
+    "86359634": {
+        "fine_id": "86359634",
+        "member_id": "bf9100e3",
+        "status": "Paid",
+        "amount": 300
     }
 }

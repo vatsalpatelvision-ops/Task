@@ -3,6 +3,7 @@ import uuid
 import os
 import json
 import csv
+import zipfile
 from datetime import datetime , timedelta
 
 
@@ -10,6 +11,7 @@ FILE_NAME = "book_data.json"
 MEMBER_DATA = "member_data.json"
 ISSUE_DATA = "issue_data.json"
 FINE_DATA = "fine_data.json"
+BACKUP_DATA = "backup_data.json"
 
 
 def load_all_member():
@@ -36,6 +38,12 @@ def load_all_fine():
     with open(FINE_DATA, "r") as f:
         return json.load(f)
 
+def load_all_backup():
+    if not os.path.exists(BACKUP_DATA):
+        return {}
+    with open(BACKUP_DATA, "r") as f:
+        return json.load(f)
+
 def save_all_data(data):
     with open(FILE_NAME, "w") as f:
         json.dump(data, f, indent=4)
@@ -50,6 +58,10 @@ def save_all_issue(data):
 
 def save_all_fine(data):
     with open(FINE_DATA, "w") as f:
+        json.dump(data, f, indent=4)
+
+def save_all_backup(data):
+    with open(BACKUP_DATA, "a") as f:
         json.dump(data, f, indent=4)
 
 
@@ -133,8 +145,23 @@ class Admin():
 
 
     @classmethod
-    def backup_data(self):
-        pass
+    def backup_data(self, backup_folder="backups"):
+        file_list = [FILE_NAME , MEMBER_DATA, ISSUE_DATA, FINE_DATA]
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        os.makedirs(backup_folder, exist_ok=True)
+        zip_name = os.path.join(backup_folder, f"json_backup_{timestamp}.zip")
+
+        # Initialize the ZIP archive
+        with zipfile.ZipFile(zip_name, mode='w', compression=zipfile.ZIP_DEFLATED) as zf:
+            for file in file_list:
+                if os.path.exists(file):
+                    # Add file to ZIP; arcname=os.path.basename(file) avoids nested folders
+                    zf.write(file, arcname=os.path.basename(file))
+                    print(f"Added: {file}")
+                else:
+                    print(f"Warning: {file} not found.")
+        
+        print(f"Backup saved to: {zip_name}")
 
 
 

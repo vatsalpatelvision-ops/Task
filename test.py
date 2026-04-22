@@ -1,21 +1,5 @@
 
 class Report():
-
-    @classmethod
-    def highest_fine_members(cls):
-        # Purpose: Display top members with highest fines
-        member_data = load_all_member()
-
-        sorted_members = sorted(member_data.values(), key=lambda x: x['fine'], reverse=True)[:5]
-
-        print("\nTop Members with Highest Fines:\n")
-        for m in sorted_members:
-            print(f"{m['name']} -> {m['fine']}")
-
-    @classmethod
-    def monthly_issue_report(cls):
-        pass
-
     @classmethod
     def overdue_report(cls):
         # Purpose: Show all overdue books with delay in days
@@ -35,10 +19,6 @@ class Report():
                     print(f"{book['title']} -> Overdue by {days} days")
 
 
-# =========================================================
-# 2. ISSUE VALIDATION FUNCTION
-# Purpose: Add missing rules (membership expiry and due warning)
-# =========================================================
 
 def extra_issue_validations(member, member_id):
     # Check if membership is expired

@@ -993,7 +993,7 @@ class Report():
         pass
 
     @classmethod
-    def search_book(self):
+    def search_book(cls):
         book_data = load_all_data()
 
         book_id = input("Enter book Title / author / ISBN / genre : ")
@@ -1017,7 +1017,7 @@ class Report():
             print(f"No book available for {book_id}")
 
     @classmethod
-    def search_member(self):
+    def search_member(cls):
         member_data = load_all_member()
 
         member_id = input("Enter Member Name / ID / phone / email : ")
@@ -1041,7 +1041,7 @@ class Report():
     
 
     @classmethod
-    def book_never_issued(self):
+    def book_never_issued(cls):
         book_data = load_all_data()
         issue_data = load_all_issue()
 
@@ -1063,7 +1063,7 @@ class Report():
         print()
 
     @classmethod
-    def most_issued_books(self):
+    def most_issued_books(cls):
         issue_data = load_all_issue()
         book_data = load_all_data()
 
@@ -1081,7 +1081,7 @@ class Report():
                 print(f"{book_data[bid]['title']} -> Issued {c} times")
 
     @classmethod
-    def highest_fine_member(self):
+    def highest_fine_member(cls):
         member_data = load_all_member()
 
         print("member_data")
@@ -1093,7 +1093,7 @@ class Report():
             print(f"{m['name']} -> {m['fine']}")
 
     @classmethod
-    def monthly_issue_report(self):
+    def monthly_issue_report(cls):
         issue_data = load_all_issue()
 
         month = int(input("Enter month (1-12): "))
@@ -1105,6 +1105,31 @@ class Report():
                 count += 1
 
         print(f"Total books issued in month {month}: {count}")
+
+    @classmethod
+    def overdue_report(cls):
+        issue_data = load_all_issue()
+        book_data = load_all_book()
+
+        print(" Overdue Book Reports : ")
+
+        not_due = True
+
+        for i in issue_data.value():
+            if i['status'] == "Issued":
+                due = datetime.fromisoformat(i['due date'])
+                today = datetime.now()
+
+                if today > due:
+                    days = (today - due).days
+                    book = book_data[i['book']]
+                    print(f"{book['title']} -> Overdue by {days} days")
+                    not_due = False
+
+        if not_due:
+            print("There is no overdue book ")
+        print()
+
 
 #--------------Main Menu---------------------
 
@@ -1339,7 +1364,8 @@ while True:
             elif report_ch == 6:
                 Report.monthly_issue_report()
             elif report_ch == 7:
-                pass
+                Report.overdue_report()
+
             elif report_ch == 8:
                 break
 

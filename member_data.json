@@ -1,32 +1,15 @@
 {
-    "9a2c9db3": {
-        "member_id": "9a2c9db3",
+    "818e9eea": {
+        "member_id": "818e9eea",
         "name": "vatsal",
         "phone": "7984363079",
-        "email": "vatsal123@gmail.com",
-        "member type": "Student",
-        "joining date": 21,
-        "exp date": 22,
-        "status": "Active",
-        "issued no of books": 1,
-        "issued book name": [
-            "poor dad"
-        ],
-        "fine": 0
-    },
-    "84183eb1": {
-        "member_id": "84183eb1",
-        "name": "honey",
-        "phone": "940",
-        "email": "honey@gmail.com",
+        "email": "vatsal@gmail.com",
         "member type": "Teacher",
-        "joining date": 21,
-        "exp date": 22,
+        "joining date": "2026-04-22T11:35:36.536320",
+        "exp date": "2026-04-23T11:35:36.536348",
         "status": "Active",
-        "issued no of books": 1,
-        "issued book name": [
-            "rich dad"
-        ],
+        "issued no of books": 0,
+        "issued book name": [],
         "fine": 0
     }
 }

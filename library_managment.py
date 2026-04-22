@@ -478,7 +478,7 @@ class Member():
     @classmethod
     def remove_member(cls):
         data = load_all_member()
-
+        print()
         if not data:
             print(" No member available")
             return
@@ -487,12 +487,14 @@ class Member():
 
         if member_id not in data:
             print(" Invalid Member ID")
+            print()
             return
 
         data.pop(member_id)
         save_all_member(data)
 
         print(" Member removed")
+        print()
 
     @classmethod
     def view_all_member(cls):
@@ -508,6 +510,7 @@ class Member():
             Member phone : {m['phone']} 
             Member type : {m['member type']}
             """)
+        print()
 
     @classmethod
     def update_member(cls):
@@ -538,11 +541,13 @@ class Member():
 
         save_all_member(data)
         print(" Updated successfully")
+        print()
 
     @classmethod
     def view_profile(self):
         member_data = load_all_member()
         member_id = input("Enter member ID to see member profile : ")
+        print()
         if member_id not in member_data:
             print("Invalid ID")
             return
@@ -559,11 +564,13 @@ class Member():
         Member fine amount : {member['fine']}
         Member status : {member['status']}
         """)
+        print()
 
     @classmethod
     def toggle_activate_deactivate(self):
         member_data = load_all_member()
         member_id = input("Enter member ID to Activate/Deactivate Member : ")
+        print()
         if member_id not in member_data:
             print("Invalid ID")
             return
@@ -579,6 +586,7 @@ class Member():
             member['status'] = "Active"
 
         save_all_member(member_data)
+        print()
 
 
 
@@ -1052,7 +1060,51 @@ class Report():
                 print(f"{b["title"]}")
         else:
             print("All books have been issued once")
+        print()
 
+    @classmethod
+    def most_issued_books(self):
+        issue_data = load_all_issue()
+        book_data = load_all_data()
+
+        count = {}
+
+        for i in issue_data.values():
+            b_id = i['book']
+            count[b_id] = count.get(b_id,0) + 1
+
+        sorted_books = sorted(count.items(), key=lambda x: x[1], reverse=True)[:5]
+
+        print("\nTop 5 Most Issued Books:\n")
+        for bid, c in sorted_books:
+            if bid in book_data:
+                print(f"{book_data[bid]['title']} -> Issued {c} times")
+
+    @classmethod
+    def highest_fine_member(self):
+        member_data = load_all_member()
+
+        print("member_data")
+        # print((member_data.values()))
+        sorted_members = sorted(member_data.values() , key = lambda x:x['fine'],reverse = True)[:5]
+        # print(sorted_members)
+        print("\nTop Members with Highest Fines:\n")
+        for m in sorted_members:
+            print(f"{m['name']} -> {m['fine']}")
+
+    @classmethod
+    def monthly_issue_report(self):
+        issue_data = load_all_issue()
+
+        month = int(input("Enter month (1-12): "))
+        count = 0
+
+        for i in issue_data.values():
+            issue_date = datetime.fromisoformat(i['issue date'])
+            if issue_date.month == month:
+                count += 1
+
+        print(f"Total books issued in month {month}: {count}")
 
 #--------------Main Menu---------------------
 
@@ -1279,13 +1331,13 @@ while True:
             elif report_ch == 2:
                 Report.search_member()
             elif report_ch == 3:
-                pass
+                Report.most_issued_books()
             elif report_ch == 4:
-                pass
+                Report.highest_fine_member()
             elif report_ch == 5:
                 Report.book_never_issued()
             elif report_ch == 6:
-                pass
+                Report.monthly_issue_report()
             elif report_ch == 7:
                 pass
             elif report_ch == 8:

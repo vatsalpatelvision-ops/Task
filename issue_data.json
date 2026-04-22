@@ -7,5 +7,14 @@
         "due date": "2026-04-29T11:39:57.856841",
         "renewal": 0,
         "status": "Return"
+    },
+    "d1522bb4": {
+        "issue_id": "d1522bb4",
+        "book": "3175462a",
+        "member": "dfa54855",
+        "issue date": "2026-04-22T12:02:45.209439",
+        "due date": "2026-04-29T12:02:45.209442",
+        "renewal": 0,
+        "status": "Return"
     }
 }

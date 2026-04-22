@@ -1,6 +1,8 @@
 {
     "max_issue_days": 7,
     "fine_rate": 6,
+    "fine_rate_30":10,
+    "lost_book":300,
     "student_book": 1,
     "teacher_book": 6,
     "external_book": 3

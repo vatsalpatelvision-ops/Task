@@ -863,7 +863,12 @@ class Issue_Return(Admin):
             diff = today - loaded_due
 
             if diff.days > 0:
-                fine = diff.days * admin_rule['fine_rate']
+                fine = 0
+                if diff.days > 0 and diff.days < 7:
+                    fine = diff.days * admin_rule['fine_rate']
+                elif diff.days > 7:
+                    fine = diff.days * admin_rule['fine_rate_30']
+                
                 issue["status"] = "Return"
                 book["available copies"] += 1
                 member["issued no of books"] -=1
@@ -1035,6 +1040,29 @@ class Report():
 
         else:
             print(f"No member available for {member_id}")
+    
+
+    @classmethod
+    def book_never_issued(self):
+        book_data = load_all_data()
+        issue_data = load_all_issue()
+
+        books = []
+        for bid, b in book_data.items():
+            issued = True
+            for iid , i in issue_data.items():
+                if i['book'] == b['book_id']:
+                    issued = False
+            if issued:
+                books.append(b)
+
+        print("Books that are never issued : ")
+        if books:
+            for b in books:
+                print(f"{b["title"]}")
+        else:
+            print("All books have been issued once")
+
 
 
 
@@ -1253,7 +1281,7 @@ while True:
             elif report_ch == 4:
                 pass
             elif report_ch == 5:
-                pass
+                Report.book_never_issued()
             elif report_ch == 6:
                 pass
             elif report_ch == 7:

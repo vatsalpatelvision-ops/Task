@@ -11,5 +11,18 @@
         "issued no of books": 0,
         "issued book name": [],
         "fine": 0
+    },
+    "dfa54855": {
+        "member_id": "dfa54855",
+        "name": "honey",
+        "phone": "9409002538",
+        "email": "honey@gmail.com",
+        "member type": "Student",
+        "joining date": "2026-04-22T12:02:06.105055",
+        "exp date": "2026-04-23T12:02:06.105074",
+        "status": "Active",
+        "issued no of books": 0,
+        "issued book name": [],
+        "fine": 0
     }
 }

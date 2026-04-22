@@ -16,5 +16,14 @@
         "due date": 29,
         "renewal": 0,
         "status": "Return"
+    },
+    "91036780": {
+        "issue_id": "91036780",
+        "book": "3175462a",
+        "member": "9a2c9db3",
+        "issue date": 22,
+        "due date": 29,
+        "renewal": 0,
+        "status": "Issued"
     }
 }

@@ -53,6 +53,91 @@ def save_all_fine(data):
         json.dump(data, f, indent=4)
 
 
+class Admin():
+    def __init__(self):
+        pass
+
+    @classmethod
+    def view_system_total(self):
+        book_data = load_all_data()
+        member_data = load_all_member()
+        issue_data = load_all_issue()
+        fine_data = load_all_fine()
+        total_books = 0
+        available_books = 0
+
+        for bid,b in book_data.items():
+            total_books += b['total copies']
+            available_books += b['available copies']
+
+
+        print("="*30)
+        print("Books Data : ")
+        print(f"Total number of books : {total_books} ")
+        print(f"Total number of Available Books: {available_books}")
+        print(f"Total number of issued Books : {total_books - available_books}")
+        print("="*30)
+
+
+        member_count = 0
+        active_member = 0
+        # deactive_member = 0
+        for mid,m in member_data.items():
+            member_count +=1
+            if m["status"] == "Active":
+                active_member += 1
+
+
+        # print("="*30)
+        print("Books Data : ")
+        print(f"Total number of Member : {member_count} ")
+        print(f"Total number of Active Member: {active_member}")
+        print(f"Total number of Deactive Member : {member_count - active_member}")
+        print("="*30)
+
+
+        print("Issued Book : ")
+
+        book_id = []
+        for iid , i in issue_data.items():
+            if i['status'] == "Issued":
+                book_id.append(i['book'])
+
+
+        if book_id:
+            for b in book_id:
+                if b in book_data:
+                    print(f"""
+                        Book name : {book_data[b]['title']}
+                        Available Copies : {book_data[b]['available copies']}
+                        Total Copies : {book_data[b]['total copies']}
+                    """ )
+        else:
+            print("No book is currently issued")
+            print()
+        print("="*30)
+        print("Total Fine Collected : ")
+        
+        fine_amount = 0
+        fine_pending = 0
+        for fin, f in fine_data.items():
+            if f['status'] == "Paid":
+                fine_amount += f['amount']
+            else:
+                fine_pending += f['amount']
+
+        print(f"Total Fine Collect is : {fine_amount}")
+        print(f"Total Pending Fine : {fine_pending}")
+
+        print("="*30)
+
+
+    @classmethod
+    def backup_data(self):
+        pass
+
+
+
 class Books():
     def __init__(self, title, author, genre, total_cp, available_cp, isbn_no, publish_year, shelf):
         data = load_all_data()
@@ -812,9 +897,6 @@ class Report():
         else:
             print(f"No member available for {member_id}")
 
-class Admin():
-    pass
-
 
 
 #--------------Main Menu---------------------
@@ -1069,10 +1151,10 @@ while True:
                 pass
 
             elif admin_ch == 4:
-                pass
+                Admin.view_system_total()
 
             elif admin_ch == 5:
-                pass
+                Admin.backup_data()
 
             elif admin_ch == 6:
                 break

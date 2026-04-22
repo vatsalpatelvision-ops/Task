@@ -287,6 +287,7 @@ class Books():
         data = load_all_data()
 
         book_id = input("Enter Book ID: ")
+        print()
 
         if book_id not in data:
             print(" Invalid ID")
@@ -300,6 +301,7 @@ class Books():
         new_author = input("New author: ")
         new_genre = input("New genre: ")
         new_total = input("New total copies: ")
+        print()
 
         if new_title:
             book["title"] = new_title
@@ -314,11 +316,13 @@ class Books():
 
         save_all_data(data)
         print(" Updated successfully")
+        print()
 
 
     @classmethod
     def remove_book(cls):
         data = load_all_data()
+        print()
 
         if not data:
             print(" No books available")
@@ -342,6 +346,7 @@ class Books():
         save_all_data(data)
 
         print(" Book removed")
+        print()
 
 
     @classmethod
@@ -350,6 +355,7 @@ class Books():
 
         if not data:
             print("No books available")
+            print()
 
         for bid , b in data.items():
             print(f"""
@@ -358,10 +364,12 @@ class Books():
             Book author : {b['author']} 
             Available Copies : {b['available copies']}
             """)
+        print()
 
     @classmethod
     def view_available_books(cls):
         data = load_all_data()
+        print()
 
         found = False
         for bid, b in data.items():
@@ -371,10 +379,12 @@ class Books():
 
         if not found:
             print(" No available books")
+            print()
 
     @classmethod
     def view_books_genre(cls,genre):
         data = load_all_data()
+        print()
 
         found = False
         for bid, b in data.items():
@@ -384,9 +394,11 @@ class Books():
 
         if not found:
             print(" No available books")
+            print()
 
     @classmethod
     def import_csv(cls):
+        print()
         filename = input("Enter CSV file: ")
 
         if not os.path.exists(filename):
@@ -418,6 +430,7 @@ class Books():
                     )
 
         print("CSV import done")
+        print()
 
 
 #!Member cls
@@ -1044,6 +1057,7 @@ class Report():
 #--------------Main Menu---------------------
 
 while True:
+    print()
     print('-'*25)
     print("1. Book Management")
     print("2. Member Management")
@@ -1053,12 +1067,14 @@ while True:
     print("6. Admin Settings")
     print("0. Exit")
     print('-'*25)
+    print()
 
     choice = int(input("Enter your Choice : "))
 
     #! book managment system
     if choice == 1:
         while True:        
+            print()
             print('-'*25)
             print("1. Add new book",
                     "2. Remove book",
@@ -1069,11 +1085,14 @@ while True:
                     "7. Add multiple books from CSV import",
                     "8. Back",sep="\n")
             print('-'*25)
+            print()
 
             book_ch = int(input("Enter your Choice : "))
 
             if book_ch == 1:
                 print('-'*25)
+                print()
+
                 print("Enter following book details : ")
                 title = input("Enter title : ")
                 author = input("Enter author : ")
@@ -1083,6 +1102,7 @@ while True:
                 isbn_no = int(input("Enter isbn no : "))
                 publication_year = int(input("Enter publication year : "))
                 shelf = input("Enter shelf location : ")
+                print()
                 print('-'*25)
 
                 book1 = Books(title, author, genre, total_copies, available_copies, isbn_no, publication_year, shelf)
@@ -1118,6 +1138,7 @@ while True:
 
     elif choice == 2:
         while True:
+            print()
             print('-'*25)
             print("1. Register new member",
                   "2. Remove member",
@@ -1129,10 +1150,12 @@ while True:
                     sep="\n"
                     )
             print('-'*25)
+            print()
 
             member_ch = int(input("Enter your choice : "))
             
             if member_ch == 1:
+                print()
                 print('-'*25)
                 print("Enter following  details : ")
                 name = input("Enter Name : ")
@@ -1140,6 +1163,7 @@ while True:
                 email = input("Enter email : ")
                 member_type = input("Enter member type(Student/ Teacher / External) : ")
                 print('-'*25)
+                print()
 
                 member1 = Member(name,phone,email,member_type)
 
@@ -1168,6 +1192,7 @@ while True:
 
     elif choice == 3:
         while True:
+            print()
             print('-'*25)
             print("1. Issue book to member",
                   "2. Return book",
@@ -1178,6 +1203,7 @@ while True:
                     sep="\n"
                     )
             print('-'*25)
+            print()
 
             issue_ch = int(input("Enter your choice : "))
             
@@ -1202,6 +1228,7 @@ while True:
     #! Fine menu
     elif choice == 4:
         while True:
+            print()
             print('-'*25)
             print("1.  Check fine for a member",
                   "2. Pay fine",
@@ -1211,6 +1238,7 @@ while True:
                     sep="\n"
                     )
             print('-'*25)
+            print()
 
             fine_ch = int(input("Enter your choice : "))
             
@@ -1269,6 +1297,7 @@ while True:
     #! Admin menu
     elif choice == 6:
         while True:
+            print()
             print('-'*25)
             print("1. Change fine rate (₹ per day)",
                   "2. Change max issue days",
@@ -1279,6 +1308,7 @@ while True:
                     sep="\n"
                     )
             print('-'*25)
+            print()
 
             admin_ch = int(input("Enter your choice : "))
             

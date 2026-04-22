@@ -31,5 +31,16 @@
         "isbn no": "4532",
         "publish year": 2004,
         "shelf": "Q12"
+    },
+    "ee837643": {
+        "book_id": "ee837643",
+        "title": "think rich",
+        "author": "kiyosaki",
+        "genre": "finance",
+        "total copies": 5,
+        "available copies": 5,
+        "isbn no": 7890,
+        "publish year": 2002,
+        "shelf": "E12"
     }
 }

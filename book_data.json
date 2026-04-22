@@ -20,5 +20,16 @@
         "isbn no": "3333",
         "publish year": 2001,
         "shelf": "b12"
+    },
+    "94c33cf2": {
+        "book_id": "94c33cf2",
+        "title": "ikigai",
+        "author": "harsh",
+        "genre": "heath",
+        "total copies": 5,
+        "available copies": 4,
+        "isbn no": "4532",
+        "publish year": 2004,
+        "shelf": "Q12"
     }
 }

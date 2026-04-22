@@ -6,7 +6,6 @@ import csv
 import zipfile
 from datetime import datetime , timedelta
 
-
 FILE_NAME = "book_data.json"
 MEMBER_DATA = "member_data.json"
 ISSUE_DATA = "issue_data.json"
@@ -253,7 +252,6 @@ class Books():
                 print("Book already exists")
                 return
 
-    
         self.book_id = str(uuid.uuid4())[:8]    
         self.title = title
         self.author = author
@@ -387,38 +385,39 @@ class Books():
         if not found:
             print(" No available books")
 
-    # @classmethod
-    # def import_csv(cls):
-    #     filename = input("Enter CSV file: ")
+    @classmethod
+    def import_csv(cls):
+        filename = input("Enter CSV file: ")
 
-    #     if not os.path.exists(filename):
-    #         print(" File not found")
-    #         return
+        if not os.path.exists(filename):
+            print(" File not found")
+            return
 
-    #     data = load_all_data()
+        data = load_all_data()
 
-    #     with open(filename, newline="") as f:
-    #         reader = csv.DictReader(f)
+        with open(filename, newline="") as f:
+            reader = csv.DictReader(f)
 
-    #         for row in reader:
-    #             duplicate = False
-    #             for b in data.values():
-    #                 if b["isbn no"] == row["isbn"]:
-    #                     duplicate = True
-    #                     break
+            for row in reader:
+                duplicate = False
+                for b in data.values():
+                    if b["isbn no"] == row["isbn no"]:
+                        duplicate = True
+                        break
 
-    #             if not duplicate:
-    #                 book = Books(
-    #                     row["title"],
-    #                     row["author"],
-    #                     row["genre"],
-    #                     row["total"],
-    #                     row["isbn"],
-    #                     row["year"],
-    #                     row["location"]
-    #                 )
+                if not duplicate:
+                    book = Books(
+                        row["title"],
+                        row["author"],
+                        row["genre"],
+                        int(row["total copies"]),
+                        int(row["available copies"]),
+                        row["isbn no"],
+                        int(row["publish year"]),
+                        row["shelf"]
+                    )
 
-    #     print("CSV import done")
+        print("CSV import done")
 
 
 #!Member cls
@@ -781,46 +780,6 @@ class Issue_Return(Admin):
 
         save_all_issue(data)
 
-
-    # @classmethod
-    # def return_book(cls):
-    #     issue_data = load_all_issue()
-    #     book_data = load_all_data()
-    #     member_data = load_all_member()
-
-    #     issue_id = input("Enter book id : ")
-    #     if issue_id not in issue_data:
-    #         print(" Invalid ID")
-    #         return
-        
-    #     # print(issue_id)
-    #     issue = issue_data[issue_id]
-    #     # print(issue)
-    #     # print(book_data[issue['book']])
-    #     book = book_data[issue['book']]
-    #     # print(book['title'])
-    #     member = member_data[issue['member']]
-    #     # print(member)
-
-    #     if issue["status"] == "Return":
-    #         print(f"Book is already Returned ")
-
-    #     #! Due date logic to pay fine is pending
-
-    #     issue["sattus"] = "Return"
-    #     book["available copies"] += 1
-    #     member["issued no of books"] -=1
-    #     # print(type(book['title']))
-    #     # print(type(member["issued book name"]))
-    #     member["issued book name"].remove(str(book['title']))
-
-    #     save_all_data(book_data)
-    #     save_all_member(member_data)
-    #     save_all_issue(issue_data)
-
-    #     #! If time available then do the return using bookid and member id
-
-
     @classmethod
     def return_book_by_bookid(self):
         issue_data = load_all_issue()
@@ -1006,9 +965,7 @@ class Issue_Return(Admin):
         
         if count <= 1:
             print("No book is overdue")
-
-
-        
+  
         
 class Report():
     def __init__(self):
@@ -1149,9 +1106,8 @@ while True:
                 Books.view_books_genre(genre)
 
             elif book_ch == 7:
-                # Books.import_csv()
-                pass
-            
+                Books.import_csv()
+                
             elif book_ch == 8:
                 break
 
@@ -1347,5 +1303,8 @@ while True:
                 print("Select Valid option ")
 
 
-    else:
+    elif choice == 0:
         break
+
+    else:
+        print("Enter Valid option")

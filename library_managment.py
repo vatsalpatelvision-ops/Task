@@ -654,8 +654,8 @@ class Fine():
     def pay_fine_member(self):
         fine_data = load_all_fine()
         member_data = load_all_member()
-        fine = None
-        member_id = input("Enter member ID to issue : ")
+        fine = []
+        member_id = input("Enter member ID to pay fine : ")
         if member_id not in member_data:
             print("Invalid ID")
             return
@@ -669,6 +669,7 @@ class Fine():
         # print(fine)
         if fine["status"] == "Pending":
             fine["status"] = "Paid"
+            fine["amount"] = member["fine"]
             member["fine"] = 0
 
         else:
@@ -680,12 +681,93 @@ class Fine():
         # member = member_data[member_id]
         # print(f"Pending fine for {member['name']} is {member['fine']}")
 
+    @classmethod
+    def fine_history_member(self):
+        fine_data = load_all_fine()
+        member_data = load_all_member()
+        fine = None
+        member_id = input("Enter member ID to pay fine : ")
+        if member_id not in member_data:
+            print("Invalid ID")
+            return
 
+        for fid,f in fine_data.items():
+            if f['member_id'] == member_id:
+                fine = f
+
+        if fine :
+            print(f"{member_id} has {fine['status']} amount of {fine['amount']} ")
+        else:
+            print(f"{member_id} doesn't have any fine history")
+
+        # member = member_data[member_id]
+
+        # # print(fine)
+        # if fine["status"] == "Pending":
+        #     fine["status"] = "Paid"
+        #     fine["amount"] = member["fine"]
+        #     member["fine"] = 0
+
+        # else:
+        #     print(f"No due fine for {member['name']}")
+
+
+        # save_all_member(member_data)
+        # save_all_fine(fine_data)
+        # member = member_data[member_id]
+        # print(f"Pending fine for {member['name']} is {member['fine']}")
         
         
-
 class Report():
-    pass
+    def __init__(self):
+        pass
+
+    @classmethod
+    def search_book(self):
+        book_data = load_all_data()
+
+        book_id = input("Enter book Title / author / ISBN / genre : ")
+
+        book = []
+        for bid,b in book_data.items():
+            if (b['title'] == book_id or b['author'] == book_id or b['isbn no'] == book_id or b['genre'] == book_id):
+                book.append(b)
+
+        if book:
+            for b in book:
+                print(f"""
+                Book title : {b['title']}
+                Book author : {b['author']}
+                Book isbn no : {b['isbn no']}
+                Book genre : {b['genre']}
+                Book available copies : {b['available copies']}
+                """)
+
+        else:
+            print(f"No book available for {book_id}")
+
+    @classmethod
+    def search_member(self):
+        member_data = load_all_member()
+
+        member_id = input("Enter Member Name / ID / phone / email : ")
+
+        member = []
+        for mid,m in member_data.items():
+            if (m['name'] == member_id or m['phone'] == member_id or m['member_id'] == member_id or m['email'] == member_id):
+                member.append(m)
+
+        if member:
+            for m in member:
+                print(f"""
+                Member name : {m['name']}
+                Member phone : {m['phone']}
+                member email : {m['email']}
+                member Currently issued book : {m['issued no of books']}
+                """)
+
+        else:
+            print(f"No member available for {member_id}")
 
 class Admin():
     pass
@@ -873,7 +955,7 @@ while True:
             elif fine_ch == 3:
                 Fine.view_all_fine()
             elif fine_ch == 4:
-                pass
+                Fine.fine_history_member()
             elif fine_ch == 5:
                 break
             else:
@@ -898,9 +980,25 @@ while True:
             report_ch = int(input("Enter your choice : "))
             
             if report_ch == 1:
+                Report.search_book()
+            
+            elif report_ch == 2:
+                Report.search_member()
+            elif report_ch == 3:
                 pass
-            else:
+            elif report_ch == 4:
+                pass
+            elif report_ch == 5:
+                pass
+            elif report_ch == 6:
+                pass
+            elif report_ch == 7:
+                pass
+            elif report_ch == 8:
                 break
+
+            else:
+                print("Select valid option")
 
     #! Admin menu
     elif choice == 6:

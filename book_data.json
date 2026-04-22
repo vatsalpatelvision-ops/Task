@@ -6,7 +6,7 @@
         "genre": "finance",
         "total copies": 5,
         "available copies": 5,
-        "isbn no": 5656,
+        "isbn no": "5656",
         "publish year": 2004,
         "shelf": "a13"
     },
@@ -17,7 +17,7 @@
         "genre": "finance",
         "total copies": 5,
         "available copies": 5,
-        "isbn no": 3333,
+        "isbn no": "3333",
         "publish year": 2001,
         "shelf": "b12"
     }

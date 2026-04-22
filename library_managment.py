@@ -646,7 +646,6 @@ class Fine():
             print("No fine pending")
         
 
-
     @classmethod
     def view_fine_member(self):
         # fine_data = load_all_fine()
@@ -1224,7 +1223,13 @@ while True:
             print('-'*25)
             print()
 
-            book_ch = int(input("Enter your Choice : "))
+            book_ch = 9
+            try:
+                book_ch = int(input("Enter your Choice : "))
+                
+            except Exception as e:
+                pass
+
 
             if book_ch == 1:
                 print('-'*25)
@@ -1289,7 +1294,14 @@ while True:
             print('-'*25)
             print()
 
-            member_ch = int(input("Enter your choice : "))
+            member_ch = 8
+
+            try:
+                member_ch = int(input("Enter your choice : "))
+                
+            except Exception as e:
+                pass
+
             
             if member_ch == 1:
                 print()
@@ -1342,8 +1354,13 @@ while True:
                     )
             print('-'*25)
             print()
+            issue_ch = 8
+            try:
+                issue_ch = int(input("Enter your choice : "))
+                
+            except Exception as e:
+                pass
 
-            issue_ch = int(input("Enter your choice : "))
             
             if issue_ch == 1:
                 Issue_Return.issue_book()
@@ -1379,8 +1396,13 @@ while True:
                     )
             print('-'*25)
             print()
+            fine_ch = 6
+            try:
+                fine_ch = int(input("Enter your choice : "))
+                
+            except Exception as e:
+                pass
 
-            fine_ch = int(input("Enter your choice : "))
             
             if fine_ch == 1:
                 Fine.view_fine_member()
@@ -1410,8 +1432,12 @@ while True:
                     sep="\n"
                     )
             print('-'*25)
-
-            report_ch = int(input("Enter your choice : "))
+            report_ch = 9
+            try:
+                report_ch = int(input("Enter your choice : "))
+                
+            except Exception as e:
+                pass
             
             if report_ch == 1:
                 Report.search_book()
@@ -1451,8 +1477,13 @@ while True:
                     )
             print('-'*25)
             print()
+            admin_ch = 8
 
-            admin_ch = int(input("Enter your choice : "))
+            try:
+                admin_ch = int(input("Enter your choice : "))
+            except Exception as e:
+                # print("Enter Valid option")
+                pass
             
             if admin_ch == 1:
                 Admin.change_fine_rate()

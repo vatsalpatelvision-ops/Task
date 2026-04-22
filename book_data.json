@@ -1,24 +1,24 @@
 {
-    "9e0f271e": {
-        "book_id": "9e0f271e",
+    "3941a0db": {
+        "book_id": "3941a0db",
         "title": "ikigai",
         "author": "harsh",
         "genre": "heath",
         "total copies": 5,
-        "available copies": 4,
+        "available copies": 5,
         "isbn no": "4532",
         "publish year": 2004,
         "shelf": "Q12"
     },
-    "0c16b87f": {
-        "book_id": "0c16b87f",
+    "71abc9c9": {
+        "book_id": "71abc9c9",
         "title": "rich dad",
         "author": "kiyosaki",
         "genre": "finance",
         "total copies": 4,
         "available copies": 4,
-        "isbn no": 4545,
+        "isbn no": 4567,
         "publish year": 2004,
-        "shelf": "A12"
+        "shelf": "A13"
     }
 }

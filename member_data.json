@@ -10,7 +10,7 @@
         "status": "Active",
         "issued no of books": 0,
         "issued book name": [],
-        "fine": 0
+        "fine": 300
     },
     "dfa54855": {
         "member_id": "dfa54855",
@@ -23,6 +23,6 @@
         "status": "Active",
         "issued no of books": 0,
         "issued book name": [],
-        "fine": 0
+        "fine": 300
     }
 }

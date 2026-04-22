@@ -16,5 +16,23 @@
         "due date": "2026-04-29T12:02:45.209442",
         "renewal": 0,
         "status": "Return"
+    },
+    "c2e9f2dd": {
+        "issue_id": "c2e9f2dd",
+        "book": "94c33cf2",
+        "member": "dfa54855",
+        "issue date": "2026-04-22T14:49:08.718480",
+        "due date": "2026-04-29T14:49:08.718500",
+        "renewal": 0,
+        "status": "Issued"
+    },
+    "9fa4ef72": {
+        "issue_id": "9fa4ef72",
+        "book": "ee837643",
+        "member": "818e9eea",
+        "issue date": "2026-04-22T14:56:54.776294",
+        "due date": "2026-04-29T14:56:54.776315",
+        "renewal": 0,
+        "status": "Lost"
     }
 }

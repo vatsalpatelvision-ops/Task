@@ -986,6 +986,50 @@ class Issue_Return(Admin):
         
         if count <= 1:
             print("No book is overdue")
+
+    @classmethod
+    def lost_book(cls):
+        member_data = load_all_member()
+        book_data = load_all_data()
+        admin_rule = load_all_admin()
+        issue_data = load_all_issue()
+
+        member_id = input("Enter member ID: ")
+        book_id = input("Enter lost book ID: ")
+
+        if member_id not in member_data or book_id not in book_data:
+            print("Invalid ID")
+            return
+
+        issue = None
+        for i in issue_data.values():
+            if i['book'] == book_id and i['member'] == member_id:
+                issue = i['issue_id']
+
+        member = member_data[member_id]
+        book = book_data[book_id]
+        issue = issue_data[issue]
+
+        fine_amount = admin_rule['lost_book']
+
+        if book['title'] in member['issued book name']:
+            member['issued book name'].remove(book['title'])
+            member['issued no of books'] -= 1
+            member['fine'] += fine_amount
+            issue['status'] = "Lost"
+
+            Fine(member_id, fine_amount)
+
+            print(f"Lost book fine {fine_amount} added")
+
+            save_all_member(member_data)
+            save_all_issue(issue_data)
+        else:
+            print("Member does not have this book")
+
+
+
+
   
         
 class Report():
@@ -1276,7 +1320,8 @@ while True:
                   "3. Renew book (extend due date)",
                   "4. View all currently issued books",
                   "5. View overdue books",
-                  "6. Back",
+                  "6. Lost book ",
+                  "7. Back",
                     sep="\n"
                     )
             print('-'*25)
@@ -1298,6 +1343,8 @@ while True:
             elif issue_ch == 5:
                 Issue_Return.view_overdue_books()
             elif issue_ch == 6:
+                Issue_Return.lost_book()
+            elif issue_ch == 7:
                 break
             else:
                 print("Enter Valid Choice : ")

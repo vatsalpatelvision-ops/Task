@@ -230,8 +230,6 @@ class Books():
     #     print("CSV import done")
 
 
-
-
 #!Member cls
 
 class Member():
@@ -337,6 +335,51 @@ class Member():
 
         save_all_member(data)
         print(" Updated successfully")
+
+    @classmethod
+    def view_profile(self):
+        member_data = load_all_member()
+        member_id = input("Enter member ID to see member profile : ")
+        if member_id not in member_data:
+            print("Invalid ID")
+            return
+
+        member = member_data[member_id]
+        
+        print(f"""
+        Member name : {member['name']}
+        Member phone : {member['phone']}
+        Member email : {member['email']}
+        Member member type : {member['member type']}
+        Member currently issued book : {member['issued no of books']}
+        List of book issued by Member : {member['issued book name']}
+        Member fine amount : {member['fine']}
+        Member status : {member['status']}
+        """)
+
+    @classmethod
+    def toggle_activate_deactivate(self):
+        member_data = load_all_member()
+        member_id = input("Enter member ID to Activate/Deactivate Member : ")
+        if member_id not in member_data:
+            print("Invalid ID")
+            return
+        
+        member = member_data[member_id]
+
+        if member['status'] == "Active" :
+            print(f"Member Deactivattion Completed ")
+            member['status'] = "Deactivate"
+
+        else:
+            print(f"Member Activation Completed ")
+            member['status'] = "Active"
+
+        save_all_member(member_data)
+
+
+
+
 
 
 class Issue_Return():
@@ -639,7 +682,7 @@ class Fine():
         # fine_data = load_all_fine()
         member_data = load_all_member()
 
-        member_id = input("Enter member ID to issue : ")
+        member_id = input("Enter member ID to Check Fine : ")
         if member_id not in member_data:
             print("Invalid ID")
             return
@@ -686,7 +729,7 @@ class Fine():
         fine_data = load_all_fine()
         member_data = load_all_member()
         fine = None
-        member_id = input("Enter member ID to pay fine : ")
+        member_id = input("Enter member ID to see member fine histroy : ")
         if member_id not in member_data:
             print("Invalid ID")
             return
@@ -887,16 +930,16 @@ while True:
                 Member.view_all_member()
 
             elif member_ch == 5:
-                pass
+                Member.view_profile()
+
             elif member_ch == 6:
-                pass
+                Member.toggle_activate_deactivate()
+
             elif member_ch == 7:
                 break
 
             else:
                 print("Enter valid choice : ")
-
-
 
     #!Issue menu
 
@@ -1018,14 +1061,24 @@ while True:
             
             if admin_ch == 1:
                 pass
-            else:
+            
+            elif admin_ch == 2:
+                pass
+
+            elif admin_ch == 3:
+                pass
+
+            elif admin_ch == 4:
+                pass
+
+            elif admin_ch == 5:
+                pass
+
+            elif admin_ch == 6:
                 break
+            else:
+                print("Select Valid option ")
 
 
     else:
         break
-
-
-
-
-    

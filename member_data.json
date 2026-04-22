@@ -23,8 +23,10 @@
         "joining date": 21,
         "exp date": 22,
         "status": "Active",
-        "issued no of books": 0,
-        "issued book name": [],
+        "issued no of books": 1,
+        "issued book name": [
+            "rich dad"
+        ],
         "fine": 0
     }
 }

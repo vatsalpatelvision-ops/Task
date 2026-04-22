@@ -25,5 +25,32 @@
         "due date": 29,
         "renewal": 0,
         "status": "Issued"
+    },
+    "7543655a": {
+        "issue_id": "7543655a",
+        "book": "48c7370d",
+        "member": "84183eb1",
+        "issue date": 22,
+        "due date": 30,
+        "renewal": 0,
+        "status": "Issued"
+    },
+    "2ed86d9c": {
+        "issue_id": "2ed86d9c",
+        "book": "48c7370d",
+        "member": "9a2c9db3",
+        "issue date": 22,
+        "due date": 29,
+        "renewal": 0,
+        "status": "Issued"
+    },
+    "c7277c10": {
+        "issue_id": "c7277c10",
+        "book": "48c7370d",
+        "member": "9a2c9db3",
+        "issue date": 22,
+        "due date": 29,
+        "renewal": 0,
+        "status": "Issued"
     }
 }

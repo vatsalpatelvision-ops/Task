@@ -12,6 +12,7 @@ MEMBER_DATA = "member_data.json"
 ISSUE_DATA = "issue_data.json"
 FINE_DATA = "fine_data.json"
 BACKUP_DATA = "backup_data.json"
+ADMIN_RULE = "admin_rule.json"
 
 
 def load_all_member():
@@ -44,6 +45,12 @@ def load_all_backup():
     with open(BACKUP_DATA, "r") as f:
         return json.load(f)
 
+def load_all_admin():
+    if not os.path.exists(ADMIN_RULE):
+        return {}
+    with open(ADMIN_RULE, "r") as f:
+        return json.load(f)
+
 def save_all_data(data):
     with open(FILE_NAME, "w") as f:
         json.dump(data, f, indent=4)
@@ -64,8 +71,19 @@ def save_all_backup(data):
     with open(BACKUP_DATA, "a") as f:
         json.dump(data, f, indent=4)
 
+def save_all_admin(data):
+    with open(ADMIN_RULE, "w") as f:
+        json.dump(data, f, indent=4)
+
 
 class Admin():
+    # max_issue_days = 7
+    admin_rule = load_all_admin()
+    max_issue_days = admin_rule['max_issue_days']
+    fine_rate = admin_rule['fine_rate']
+    student_book = admin_rule['student_book']
+    teacher_book = admin_rule['teacher_book']
+    external_book = admin_rule['external_book']
     def __init__(self):
         pass
 
@@ -146,7 +164,7 @@ class Admin():
 
     @classmethod
     def backup_data(self, backup_folder="backups"):
-        file_list = [FILE_NAME , MEMBER_DATA, ISSUE_DATA, FINE_DATA]
+        file_list = [FILE_NAME , MEMBER_DATA, ISSUE_DATA, FINE_DATA, ADMIN_RULE]
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         os.makedirs(backup_folder, exist_ok=True)
         zip_name = os.path.join(backup_folder, f"json_backup_{timestamp}.zip")
@@ -163,7 +181,68 @@ class Admin():
         
         print(f"Backup saved to: {zip_name}")
 
+    @classmethod
+    def change_max_issue_days(self):
+        # admin_rule = load_all_admin()
+        # max_issue_days = admin_rue['max_issue_days']
+        print(f"Current max issue days for a book is : {Admin.max_issue_days}")
+        new_days = int(input("Enter new days you want to set : "))
+        Admin.max_issue_days = new_days
+        self.admin_rule['max_issue_days'] = new_days
 
+        print(f"New max issue days is {Admin.max_issue_days}")
+
+        save_all_admin(self.admin_rule)
+
+    @classmethod
+    def change_fine_rate(self):
+        # admin_rule = load_all_admin()
+        # max_issue_days = admin_rue['max_issue_days']
+        print(f"Current Fine Per day is : {Admin.fine_rate}")
+        new_fine = int(input("Enter new Fine amount you want to charge per day : "))
+        Admin.fine_rate = new_fine
+        self.admin_rule['fine_rate'] = new_fine
+
+        print(f"New Fine rate is {Admin.fine_rate}")
+
+        save_all_admin(self.admin_rule)
+
+    @classmethod
+    def change_book_count(self):
+        user_input = input("Enter the member type you want to change total books they can issue (Teacher / Student / External) : ")
+
+        if user_input == "Teacher":
+            print(f"Current no of books Teacher can issue at a time is : {self.teacher_book}")
+            new_book = int(input("Enter new no of book Teacher can issue at a time : "))
+            Admin.teacher_book = new_book
+            self.admin_rule['teacher_book'] = new_book
+
+            print(f"New no of books Teacher can issue at a time : {Admin.teacher_book}")
+
+            save_all_admin(self.admin_rule)
+
+        elif user_input == "Student":
+            print(f"Current no of books Student can issue at a time is : {self.student_book}")
+            new_book = int(input("Enter new no of book Student can issue at a time : "))
+            Admin.student_book = new_book
+            self.admin_rule['student_book'] = new_book
+
+            print(f"New no of books Teacher can issue at a time : {Admin.student_book}")
+
+            save_all_admin(self.admin_rule)
+        
+        elif user_input == "External":
+            print(f"Current no of books External can issue at a time is : {self.external_book}")
+            new_book = int(input("Enter new no of book External can issue at a time : "))
+            Admin.external_book = new_book
+            self.admin_rule['external_book'] = new_book
+
+            print(f"New no of books Teacher can issue at a time : {Admin.external_book}")
+
+            save_all_admin(self.admin_rule)
+        else:
+            print("Enter valid option : ")
+        
 
 class Books():
     def __init__(self, title, author, genre, total_cp, available_cp, isbn_no, publish_year, shelf):
@@ -494,11 +573,11 @@ class Member():
 
 
 
-class Issue_Return():
+class Issue_Return(Admin):
     def __init__(self,book_id,member_id):
         self.issue_id = str(uuid.uuid4())[:8]    
         self.issue_date = datetime.now()
-        self.due_date = datetime.now() + timedelta(days=7)
+        self.due_date = datetime.now() + timedelta(days=Admin.max_issue_days)
         self.renewal = 0
         self.book_id = book_id
         self.member_id = member_id
@@ -508,6 +587,10 @@ class Issue_Return():
 
     @classmethod
     def issue_book(self):
+        admin_rule=load_all_admin()
+        student_book = admin_rule['student_book']
+        teacher_book = admin_rule['teacher_book']
+        external_book = admin_rule['external_book']
         book_data = load_all_data()
         member_data = load_all_member()
         book_id = input("Enter book ID to issue : ")
@@ -524,17 +607,21 @@ class Issue_Return():
         book = book_data[book_id]
         member = member_data[member_id]
 
-        if (member["issued no of books"] >= 2 and member["member type"] == "Student") or (member["issued no of books"] >= 5 and member["member type"] == "Teacher") or (member["issued no of books"] >= 1 and member["member type"] == "External"):
+        if (member["issued no of books"] >= student_book and member["member type"] == "Student") or (member["issued no of books"] >= teacher_book and member["member type"] == "Teacher") or (member["issued no of books"] >= external_book and member["member type"] == "External"):
             print("You already issued all the books you can !! return 1 book to issue new book !")
+            return
 
         elif member["status"] == "Deactivate":
             print("Your Status is deactivated. You can't issue book")
+            return
 
         elif member["fine"] > 0 :
             print(f"You have unpaid fine of {member["fine"]} , pay the amount first to issue the book")
+            return
         
         elif book["available copies"] <=0 :
             print(f"No copies available for the book {book["title"]}")
+            return
 
         for b in member["issued book name"]:
             if book["title"] == b:
@@ -1169,13 +1256,13 @@ while True:
             admin_ch = int(input("Enter your choice : "))
             
             if admin_ch == 1:
-                pass
+                Admin.change_fine_rate()
             
             elif admin_ch == 2:
-                pass
+                Admin.change_max_issue_days()
 
             elif admin_ch == 3:
-                pass
+                Admin.change_book_count()
 
             elif admin_ch == 4:
                 Admin.view_system_total()
